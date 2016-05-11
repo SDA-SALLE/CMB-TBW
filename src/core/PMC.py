@@ -131,8 +131,13 @@ def brindingpmc(folder):
 	
 	listout = listaCSV(folder)
 	cont = 0
+	
+	folderSave = os.path.join('..', 'out', 'emissions', 'grid', 'PMC', 'Full', '')
+	if 'Wear' in folder: 
+		csvsalida = open(folderSave + 'Wear' + '_' +'PMC_FULL.csv', 'w')
+	elif 'Combustion' in folder: 
+		csvsalida = open(folderSave + 'Combustion' + '_' +'PMC_FULL.csv', 'w')
 
-	csvsalida = open(folder + 'PMC_FULL.csv', 'w')
 	salida = csv.writer(csvsalida, delimiter=',')#, quoting=csv.QUOTE_ALL
 	salida.writerow(['ROW', 'COL', 'LAT', 'LON', 'POLNAME', 'UNIT', 'E00h', 'E01h', 'E02h', 'E03h', 'E04h', 'E05h', 'E06h' ,'E07h', 'E08h', 'E09h', 'E10h', 'E11h', 'E12h', 'E13h', 'E14h', 'E15h', 'E16h', 'E17h', 'E18h', 'E19h', 'E20h', 'E21h', 'E22h', 'E23h', 'E24h'])
 	

@@ -83,7 +83,7 @@ def brinding(flows, links, noun):
 
 	for y in range(1, MFlows.shape[0]):
 		IDflowsEstation = int(float(MFlows[y][colIDEstation]))
-		hr = MFlows[y][colhour]
+		hr = int(MFlows[y][colhour])
 
 		FID = data.keys()
 
@@ -115,7 +115,6 @@ def brinding(flows, links, noun):
 				 	entryVehicle[headFlows].append(MFlows[y][x])
 
 	folder = os.path.join("..", 'data', 'datalink', '')
-	#print data
 	writebinding(folder, data, noun)
 
 def brindingsecondary(flows, links):
@@ -126,15 +125,14 @@ def brindingsecondary(flows, links):
 	
 	Intermedia = 0.37
 	Local = 0.22
-	Activity = ['L', 'C', 'ESP', 'M']
+	Activity = ['L', 'AUT_Gas', 'AUT_Gas', 'AUT_GNV', 'CC_Gas', 'CC_Dsel', 'CC_GNV', 'TX_Gas', 'TX_GNV', 'C', 'MB_Dsel', 'ESP', 'ESP_Gas', 'ESP_Dsel', 'ESP_GNV', 'M', 'M_Gas']
 	ResidencialAct = 0.22
-	NotActivity = [ 'B', 'C2P', 'BT', 'AL', 'AT', 'BA', 'INT', 'C2G', 'C3-C4', 'C5', '>C5']
+	NotActivity = [ 'B', 'B_Dsel', 'C2P', 'C2P_Dsel', 'C2P_Gas', 'C2P_GNV', 'BT', 'BT_Dsel', 'AL', 'AL_Dsel', 'AT', 'AT_Dsel', 'BA', 'BA_Dsel', 'INT', 'INT_Dsel', 'INT_Gas','INT_GNV', 'C2G', 'C2G_Dsel', 'C2G_Gas', 'C2G_GNV', 'C3-C4', 'C3-C4_Dsel', 'C3-C4_Gas', 'C3-C4_GNV', 'C5', 'c5_Dsel', 'c5_Gas', 'c5_GNV', '>C5', '>c5_Dsel', '>c5_Gas', '>c5_GNV']
 	ResidencialNotAct = 0
 
 
 	headData = Mdata[0,:] 
 	headFlows = MFlows[0,:]
-	#print headData
 	
 	index = 0
 	for name in headData: 
@@ -156,7 +154,7 @@ def brindingsecondary(flows, links):
 	for y in range(1, Mdata.shape[0]):
 
 		FID = int(float(Mdata[y][colLinkID]))
-
+		#print 'Trabajando con el Link #', FID
 		if data.get(FID) is None: 
 			data[FID] = {}
 
@@ -179,7 +177,7 @@ def brindingsecondary(flows, links):
 
 	for y in range(1, MFlows.shape[0]):
 		IDflowsEstation = int(float(MFlows[y][colIDEstation]))
-		hr = MFlows[y][colhour]
+		hr = int(MFlows[y][colhour])
 
 		FID = data.keys()
 
@@ -214,7 +212,7 @@ def brindingsecondary(flows, links):
 	
 	for ID in FID:
 		clasifi = data[ID]['link']['CLASIFI_SU'][0]
-		#print clasifi
+		print 'Trabajando con Link #', ID
 		types = data[ID]['flows'].keys()
 		for typ in types:
 			hour = data[ID]['flows'][typ].keys()

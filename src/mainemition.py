@@ -10,9 +10,14 @@ import sys
 sys.path.append('core')
 from emitionmovil import *
 from PMC import *
+from clear import *
 
+folderout = os.path.join ('..', 'out' ,'')
+clear(folderout)
 
 init()
+categoryVechiclegrid()
+categoryCarburantgrid()
 
 print 'Star PMC'
 folderconbustion = os.path.join('..','out','emissions', 'grid', 'combustion', '')

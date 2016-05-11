@@ -233,16 +233,14 @@ def testing(name):
 	names = data.keys()
 
 	for key in names:
-		#print data[key]
 		Factors = data[key]
 		sumTotal1 = 0
 		sumTotal2 = 0
 		for subkey in Factors: 
 
 			archive = folder2 + subkey 
-			#print archive
 			Marchive = convertCSVMatriz(archive)
-
+			
 			for i in range(1, Marchive.shape[0]):
 				for x in range(6, Marchive.shape[1]):
 					sumTotal1 += float(Marchive[i][x])
@@ -262,7 +260,7 @@ def testing(name):
 		sumTotal1 = str(sumTotal1)
 		sumTotal2 = str(sumTotal2)
 
-
+		#print sumTotal1, sumTotal2
 		if sumTotal1 == sumTotal2:
 			print 'OK'
 		else: 
