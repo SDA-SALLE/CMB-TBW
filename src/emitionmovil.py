@@ -19,15 +19,20 @@ def convert():
 	archivelinksecondary = os.path.join('..', 'data', 'datalink', 'SECUNDARIAS.xlsx');
 	archivelinktm = os.path.join('..', 'data', 'datalink', 'TM.xlsx');
 
-
 	brinding(archiveflows, archivelinkprincipal, 'principal')
 	print 'brinding Principal Listo'
 	brinding(archiveflows, archivelinktm, 'TM')
 	print 'brinding Transmilenio Listo'
-	brindingsecondary(archiveflows, archivelinksecondary)
+	Type = 'HABIL'
+	brindingsecondary(archiveflows, archivelinksecondary, Type)
+	Type = 'NOHAB'
+	brindingsecondary(archiveflows, archivelinksecondary, Type)
+	archive1 = os.path.join('..', 'data', 'datalink', 'secundary_HABIL_brinding.csv')
+	archive2 = os.path.join('..', 'data', 'datalink', 'secundary_NOHAB_brinding.csv')
+	unions(archive1, archive2)
 	print 'brinding Secundarias Listo'
-
-def categoryVechicle(data, noun, pollution): 
+	
+def categoryVechicle(data, noun, pollution, Typo): 
 
 	data2 = {}
 	keys = data.keys()
@@ -51,10 +56,9 @@ def categoryVechicle(data, noun, pollution):
 
 			Types = data[key]['pollutants'][hour].keys()
 			
-			#Habil 
-			vehiclesHabil = data[key]['pollutants'][hour]['Habil'].keys()
+			vehicles = data[key]['pollutants'][hour][Typo].keys()
 			
-			for vehicle in vehiclesHabil: 
+			for vehicle in vehicles: 
 				index = 0
 				for value in vehicle: 
 					if value == '_':
@@ -62,28 +66,10 @@ def categoryVechicle(data, noun, pollution):
 					index += 1 
 
 				vehicle2 = vehicle[:possub]
-
 				for cat in categories:		
 					if cat == vehicle2:
-						data2[key]['pollutants'][hour]['Habil'][cat].append(data[key]['pollutants'][hour]['Habil'][vehicle][0])
+						data2[key]['pollutants'][hour][Typo][cat].append(data[key]['pollutants'][hour][Typo][vehicle][0])
 
-			#NoHabil
-			vehiclesNHabil = data[key]['pollutants'][hour]['NHabil'].keys()
-			for vehicle in vehiclesNHabil: 
-				index = 0
-				for value in vehicle: 
-					if value == '_':
-						possub = index
-					index += 1 
-
-				vehicle2 = vehicle[2:possub]
-
-		 		for cat in categories: 		
-		 			if cat == vehicle2:
-		 				data2[key]['pollutants'][hour]['NHabil'][cat].append(data[key]['pollutants'][hour]['NHabil'][vehicle][0])
-
-
-	#print data2
 	keys = data2.keys()
 	for key in keys: 
 		hours = data2[key]['pollutants'].keys()
@@ -94,7 +80,7 @@ def categoryVechicle(data, noun, pollution):
 				for category in categories: 
 					data2[key]['pollutants'][hour][Type][category] = sum(data2[key]['pollutants'][hour][Type][category])
 
-	writevehicle(data2, noun, pollution, 1)
+	writevehicle(data2, noun, pollution, Typo,  1)
 
 def categoryVechiclegrid():
 	folder = os.path.join('..', 'out', 'category', 'link', '')
@@ -179,9 +165,9 @@ def categoryVechiclegrid():
 
 		
 		pollution = 0
-		writevehicle(data, noun, pollution, 2)
+		writevehicle(data, noun, pollution, None, 2)
 
-def categoryCarburant(data, noun, pollution): 
+def categoryCarburant(data, noun, pollution, Typo): 
 	data2 = {}
 	keys = data.keys()
 	for key in keys: 
@@ -198,27 +184,27 @@ def categoryCarburant(data, noun, pollution):
 			entryhour = data2[key]['pollutants']
 			
 			if entryhour.get(hour) is None:
-				entryhour[hour] = {'Habil': {'GNV': [], 'GAS': [], 'DSEL': []}, 'NHabil': {'GNV': [], 'GAS': [], 'DSEL': []}}
+				entryhour[hour] = {Typo: {'GNV': [], 'GAS': [], 'DSEL': []}, 'NHabil': {'GNV': [], 'GAS': [], 'DSEL': []}}
 
-			vehiclesHabil = data[key]['pollutants'][hour]['Habil'].keys()
+			vehiclesHabil = data[key]['pollutants'][hour][Typo].keys()
 
 			for vehicle in vehiclesHabil: 
 				if 'GNV' in vehicle: 
-					data2[key]['pollutants'][hour]['Habil']['GNV'].append(data[key]['pollutants'][hour]['Habil'][vehicle][0])
+					data2[key]['pollutants'][hour][Typo]['GNV'].append(data[key]['pollutants'][hour][Typo][vehicle][0])
 				elif 'GAS' in vehicle: 
-					data2[key]['pollutants'][hour]['Habil']['GAS'].append(data[key]['pollutants'][hour]['Habil'][vehicle][0])
+					data2[key]['pollutants'][hour][Typo]['GAS'].append(data[key]['pollutants'][hour][Typo][vehicle][0])
 				elif 'DSEL' in vehicle: 
-					data2[key]['pollutants'][hour]['Habil']['DSEL'].append(data[key]['pollutants'][hour]['Habil'][vehicle][0])
+					data2[key]['pollutants'][hour][Typo]['DSEL'].append(data[key]['pollutants'][hour][Typo][vehicle][0])
 
-			vehiclesNHabil = data[key]['pollutants'][hour]['NHabil'].keys()
+			# vehiclesNHabil = data[key]['pollutants'][hour]['NHabil'].keys()
 
-			for vehicle in vehiclesNHabil: 
-				if 'GNV' in vehicle: 
-					data2[key]['pollutants'][hour]['NHabil']['GNV'].append(data[key]['pollutants'][hour]['NHabil'][vehicle][0])
-				elif 'GAS' in vehicle: 
-					data2[key]['pollutants'][hour]['NHabil']['GAS'].append(data[key]['pollutants'][hour]['NHabil'][vehicle][0])
-				elif 'DSEL' in vehicle: 
-					data2[key]['pollutants'][hour]['NHabil']['DSEL'].append(data[key]['pollutants'][hour]['NHabil'][vehicle][0])
+			# for vehicle in vehiclesNHabil: 
+			# 	if 'GNV' in vehicle: 
+			# 		data2[key]['pollutants'][hour]['NHabil']['GNV'].append(data[key]['pollutants'][hour]['NHabil'][vehicle][0])
+			# 	elif 'GAS' in vehicle: 
+			# 		data2[key]['pollutants'][hour]['NHabil']['GAS'].append(data[key]['pollutants'][hour]['NHabil'][vehicle][0])
+			# 	elif 'DSEL' in vehicle: 
+			# 		data2[key]['pollutants'][hour]['NHabil']['DSEL'].append(data[key]['pollutants'][hour]['NHabil'][vehicle][0])
 	data = {}
 	keys = data2.keys()
 	for key in keys: 
@@ -231,7 +217,7 @@ def categoryCarburant(data, noun, pollution):
 					data2[key]['pollutants'][hour][Type][carburant] = sum(data2[key]['pollutants'][hour][Type][carburant])
 
 	
-	writecarburant(data2, noun, pollution, 1)
+	writecarburant(data2, noun, pollution, Typo, 1)
 
 def categoryCarburantgrid():
 	folder = os.path.join('..', 'out', 'carburant', 'link', '')
@@ -291,8 +277,6 @@ def categoryCarburantgrid():
 				entrycategory[category] = {}
 
 
-
-
 			for hour in range(0, 24):
 				if entrycategory[category].get(hour) is None:
 					entrycategory[category][hour] = []
@@ -316,13 +300,14 @@ def categoryCarburantgrid():
 
 		
 		pollution = 0
-		writecarburant(data, noun, pollution, 2)
+		writecarburant(data, noun, pollution, None,  2)
 
-def calculation(archive, noun, FactorEmissions):
+def calculation(archive, noun, FactorEmissions, Typo):
 
 	FEMatriz = convertXLSCSV(FactorEmissions)
 	headFE = FEMatriz[0,:]
 	
+	print 'calculation', noun, '-', Typo
 	matriz = convertCSVMatriz(archive)
 	head = matriz[0,:]
 
@@ -354,9 +339,7 @@ def calculation(archive, noun, FactorEmissions):
 	    index += 1
 
 	nameresh = matriz[0,colIH:colFH]
-	#print nameresh
 	nameresnh = matriz[0,colFH:colFNH]
-	#print nameresnh
 
 	data = {}
 	pollutant = {}
@@ -419,62 +402,64 @@ def calculation(archive, noun, FactorEmissions):
 			entryhour = data[FID_LINK]['pollutants']
 			if entryhour.get(hour) is None: 
 				entryhour[hour] = {}
-				entryhour[hour]['Habil'] = {}
-				entryhour[hour]['NHabil'] = {}
+				entryhour[hour][Typo] = {}
 
 			
-			entrycat = entryhour[hour]['Habil']
-			for x in range(colIH, colFH):
-				category = matriz[0][x]
-				if entrycat.get(category) is None:
-					entrycat[category] = []
+			entrycat = entryhour[hour][Typo]
 
-			entrycat = entryhour[hour]['NHabil']
-			for x in range(colFH, colFNH):
-				category = matriz[0][x]
-				if entrycat.get(category) is None:
-					entrycat[category] = []
+			if Typo == 'Habil':
+				for x in range(colIH, colFH):
+					category = matriz[0][x]
+					if entrycat.get(category) is None:
+						entrycat[category] = []
 
-			for x in range(colIH, colFH): 
-			  	category = matriz[0][x]
-			  	L = float(matriz[i][colL])/1000
-			   	val = (round((((float(matriz[i][x]) * L) * pollutant[poll][category][0])), 8))
-			 	uncertainty = (round((((float(matriz[i][x]) * L) * pollutant[poll][category][1])), 8))
-			   	data[FID_LINK]['pollutants'][hour]['Habil'][category].append(val)
-				data[FID_LINK]['pollutants'][hour]['Habil'][category].append(uncertainty)
+				for x in range(colIH, colFH): 
+				  	category = matriz[0][x]
+				  	L = float(matriz[i][colL])/1000
+				   	val = (round((((float(matriz[i][x]) * L) * pollutant[poll][category][0])), 8))
+				 	uncertainty = (round((((float(matriz[i][x]) * L) * pollutant[poll][category][1])), 8))
+				   	data[FID_LINK]['pollutants'][hour][Typo][category].append(val)
+					data[FID_LINK]['pollutants'][hour][Typo][category].append(uncertainty)
 
+			elif Typo == 'NHabil':
+				for x in range(colFH, colFNH):
+					category = matriz[0][x]
+					if entrycat.get(category) is None:
+						entrycat[category] = []
 
-			for x in range(colFH, colFNH): 
-			  	category = matriz[0][x]
-				L = float(matriz[i][colL])/1000
-				val = (round((((float(matriz[i][x]) * L) * pollutant[poll][category][0])), 8))
-			 	uncertainty = (round((((float(matriz[i][x]) * L) * pollutant[poll][category][1])), 8))
-				data[FID_LINK]['pollutants'][hour]['NHabil'][category].append(val)
-				data[FID_LINK]['pollutants'][hour]['NHabil'][category].append(uncertainty)
+				for x in range(colFH, colFNH): 
+				  	category = matriz[0][x]
+					L = float(matriz[i][colL])/1000
+					val = (round((((float(matriz[i][x]) * L) * pollutant[poll][category][0])), 8))
+				 	uncertainty = (round((((float(matriz[i][x]) * L) * pollutant[poll][category][1])), 8))
+					data[FID_LINK]['pollutants'][hour][Typo][category].append(val)
+					data[FID_LINK]['pollutants'][hour][Typo][category].append(uncertainty)
 
-		categoryVechicle(data, noun, poll)
-		categoryCarburant(data, noun, poll)
-		
+		writedeparture(data, noun, poll, Typo)
+
 		FID_Link = data.keys()
 
 		for ID in FID_Link: 
 			hours = data[ID]['pollutants'].keys()
 			for hour in hours:
-				tipo = hours = data[ID]['pollutants'][hour].keys()
-				for tip in tipo:
-					categories = hours = data[ID]['pollutants'][hour][tip].keys()
-					sumaval = sumauncertainy = 0
-					for category in categories:
-						sumaval += data[ID]['pollutants'][hour][tip][category][0]
-						sumauncertainy += data[ID]['pollutants'][hour][tip][category][1]
-					
-					data[ID]['pollutants'][hour][tip] = []
-					data[ID]['pollutants'][hour][tip].append(sumaval)
-					data[ID]['pollutants'][hour][tip].append(sumauncertainy)
+				categories = hours = data[ID]['pollutants'][hour][Typo].keys()
+				sumaval = sumauncertainy = 0
+				for category in categories:
+					sumaval += data[ID]['pollutants'][hour][Typo][category][0]
+					sumauncertainy += data[ID]['pollutants'][hour][Typo][category][1]
+				
+				data[ID]['pollutants'][hour][Typo] = []
+				data[ID]['pollutants'][hour][Typo].append(sumaval)
+				data[ID]['pollutants'][hour][Typo].append(sumauncertainy)
+		
+
 		if 'Brake' in FactorEmissions:
-			writeemsions(data, noun, poll, 2)
+			writeemsions(data, noun, poll, Typo, 2)
 		else:
-			writeemsions(data, noun, poll, 1)
+			writeemsions(data, noun, poll, Typo, 1)
+
+	matriz = None
+	FEMatriz = None
 
 def finality(folder, noun):
 
@@ -565,104 +550,54 @@ def list(folder):
 
 	return lstFilesEmissions
 
-def init():
-	print 'empieza proceso'
-	convert()
-	FactorEmissions = os.path.join('..', 'data', 'FEmition', 'FactoresEmision.xlsx')
-	FactoresEmissionBrake = os.path.join('..', 'data', 'FEmition', 'FEBrake.xlsx')
+def createdata(archive, Typo): 
+	data = {}
+	matriz = convertCSVMatriz(archive)
 
-	
-	principal = os.path.join('..', 'data', 'datalink', 'principalbrinding.csv')
-	calculation(principal, 'Principal', FactorEmissions)
-	calculation(principal, 'Principal', FactoresEmissionBrake)
-	print 'Calculo para Principales Habil y No Habil Listos'
-	
-	TM = os.path.join('..', 'data', 'datalink', 'TMbrinding.csv')
-	calculation(TM, 'TM', FactorEmissions)
-	calculation(TM, 'TM', FactoresEmissionBrake)
-	print 'Calculo para Transmilenio Habil y No Habil Listos'
-	
-	secundarias = os.path.join('..', 'data', 'datalink', 'secundarybrinding.csv')
-	calculation(secundarias, 'Secundary', FactorEmissions)
-	calculation(secundarias, 'Secundary', FactoresEmissionBrake)
-	print 'Calculo para Secundarias Habil y No Habil Listos'
+	head = matriz[0,:]
+	index = 0
+	for value in head:
+		if value == 'FID_LINK':
+			colLink = index
+		if value == 'FID_Grilla':
+			colGrilla = index
+		if value == 'COL': 
+			colCOL = index
+		if value == 'ROW': 
+			colROW = index
+		if value == 'LAT':
+			colLAT = index
+		if value == 'LON':
+			colLON = index
+		if value == 'hora':
+			colHour = index
+		index += 1
 
-	foldercombustion = os.path.join('..', 'out', 'emissions', 'link', 'combustion', '')
-	listFilesEmissions = list(foldercombustion)
+	#head = None
+	for i in range(1, matriz.shape[0]):
+		key = matriz[i][colLink]
+		hour = int(matriz[i][colHour])
+		if data.get(key) is None: 
+			data[key] = {'General': {'LAT': [], 'LON': [], 'COL': [], 'ROW': [], 'FID_Grilla': []}, 'pollutants': {}}
 
-	for File in listFilesEmissions:
-		finality(foldercombustion, File)
+		entryhour = data[key]['pollutants']
+		if entryhour.get(hour) is None: 
+			entryhour[hour] = {Typo: {}}
 
-	folderwear = os.path.join('..', 'out', 'emissions', 'link', 'wear', '')
-	listFilesEmissions = list(folderwear)
 
-	for File in listFilesEmissions:
-		finality(folderwear, File)
-	
-	gridCombustion = os.path.join('..', 'out', 'emissions', 'grid', 'combustion', '')
-	brindingfinality(gridCombustion)
+		if data[key]['General']['LAT'] == []:
+			data[key]['General']['LAT'].append(matriz[i][colLAT])
+			data[key]['General']['LON'].append(matriz[i][colLON])
+			data[key]['General']['ROW'].append(matriz[i][colROW])
+			data[key]['General']['COL'].append(matriz[i][colCOL])
+			data[key]['General']['FID_Grilla'].append(matriz[i][colGrilla])
 
-	gridWear = os.path.join('..', 'out', 'emissions', 'grid', 'wear', '')
-	brindingfinality(gridWear)
 
-	ArchiveHabilWear = os.path.join('..', 'out', 'emissions', 'emissionsHabilWear.csv')
-	ArchiveHabilConbustion = os.path.join('..', 'out', 'emissions', 'emissionsHabilConbustion.csv')
-	final(ArchiveHabilWear)
-	final(ArchiveHabilConbustion)
-	
-	ArchiveNHabilWear = os.path.join('..', 'out', 'emissions', 'emissionsNoHabilWear.csv')
-	ArchiveNHabilConbustion = os.path.join('..', 'out', 'emissions', 'emissionsNoHabilConbustion.csv')
-	final(ArchiveNHabilWear)
-	final(ArchiveNHabilConbustion)
+		entrycategory = entryhour[hour][Typo]
+		for x in range(colHour+1, matriz.shape[1]):
+			name = head[x]
+			if entrycategory.get(name) is None: 
+				entrycategory[name] = []
+				entrycategory[name].append(float(matriz[i][x]))
 
-	print 'speciation PM2.5 BRAKE'
-	archivespeciation = os.path.join('..', 'data', 'speciation', 'BRAKE_SCP_PROF_PM25.xlsx')
-	folderwear = os.path.join('..', 'out', 'emissions', 'grid', 'wear', '')
-	speciationwear(archivespeciation, folderwear)
-	print 'Testing'
-	testing('PM2.5 BRAKE')
-
-	print 'speciation PM2.5 TIRE'
-	archivespeciation = os.path.join('..', 'data', 'speciation', 'TIRE_SCP_PROF_PM25.xlsx')
-	folderwear = os.path.join('..', 'out', 'emissions', 'grid', 'wear', '')
-	speciationwear(archivespeciation, folderwear)
-	print 'Testing'
-	testing('PM2.5 TIRE')
-
-	foldercombustion = os.path.join('..', 'out', 'emissions', 'grid', 'combustion', '')
-	speciationcombustion(foldercombustion)
-
-	#brinding speciation in folder /out/speciation/brinding
-	print 'Start brinding speciation'
-	foldercombustion = os.path.join('..', 'out', 'speciation', 'combustion', '')
-	brindingspeciation(foldercombustion, 'combustion')	
-
-	folderwear = os.path.join('..', 'out', 'speciation', 'wear', '')
-	brindingspeciation(folderwear, 'wear')	
-
-	foldercombustion = os.path.join('..', 'out', 'speciation', 'brinding', 'combustion', '')
-	archivescombustion = list(foldercombustion)
-
-	for combustion in archivescombustion:
-		archive = foldercombustion + combustion
-		#print archive
-		final(archive)
-
-	folderwearTIRE = os.path.join('..', 'out', 'speciation', 'brinding', 'wear', 'TIRE', '')
-	archiveswearTIRE = list(folderwearTIRE)
-
-	for wear in archiveswearTIRE:
-		archive = folderwearTIRE + wear
-		final(archive)
-
-	folderwearBRAKE = os.path.join('..', 'out', 'speciation', 'brinding', 'wear', 'BRAKE', '')
-	archiveswearBRAKE = list(folderwearBRAKE)
-
-	for wear in archiveswearBRAKE:
-		archive = folderwearBRAKE + wear
-		final(archive)
-
-	print 'brinding speciation OK'
-	print '*------------------------------------*'
-	print 'Archivo NoHabil Listo'
-	print 'End'
+	return data

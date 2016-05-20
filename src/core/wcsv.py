@@ -50,9 +50,9 @@ def wcsv(data, name, folder):
 		csvsalida.write(str(data[ID]['pollutants'][pollutant][0][0]))
 		csvsalida.write('\n')
 
+	data = None
 	csvsalida.close()
-	data = {}
-
+	
 def writematriz(matriz, folder):
 
 	csvsalida = open(folder + '.csv', 'w')
@@ -60,7 +60,7 @@ def writematriz(matriz, folder):
 
 	for x in range(0, matriz.shape[0]):
 		salida.writerow(matriz[x])
-
+	matriz = None
 	csvsalida.close()
 
 def writesum(data):
@@ -89,9 +89,8 @@ def writesum(data):
 				csvsalida.write(str(data[ID]['NOHAB'][vehicles]))
 				csvsalida.write(',')
 		csvsalida.write('\n')
-	
+	data = None
 	csvsalida.close()
-	data = {}
 
 def writebinding(folder, data, name):
 
@@ -100,12 +99,12 @@ def writebinding(folder, data, name):
 	FID = data.keys()
 
 	cont = 0
+	
 	for ID in FID:
 		nameslinks = data[ID]['link'].keys()
-
+		#Typ = data[ID]['flows'].keys()
+		#Typ = Typ[0]
 		namevehicle = sorted(data[ID]['flows']['HABIL'][0].keys())
-		
-
 		hours = data[ID]['flows']['HABIL'].keys()
 
 		if cont == 0:
@@ -149,92 +148,115 @@ def writebinding(folder, data, name):
 		 			csvsalida.write (str(data[ID]['flows']['NOHAB'][hour][vehicle][0]))
 		 			
 		 	csvsalida.write('\n')
+		data[ID] = None
+	data = None
 	csvsalida.close()
-	data = {}
 
-def writeemsions(data, name, pollutant, id): 
+def writeBrindingSecondary(folder, data, name, Typo):
+
+	csvsalida = open(folder + name + '_' + Typo + '_' +'brinding.csv', 'w')
+	if Typo == 'HABIL':
+		namevehiclefull = ['FID','hora', '>C5_DSEL', '>C5_GNV', '>C5_GAS', 'AL_DSEL', 'AT_DSEL', 'AUT_GNV', 'AUT_GAS', 'BA_DSEL', 'BT_DSEL', 'B_DSEL', 'C2G_DSEL', 'C2G_GNV', 'C2G_GAS', 'C2P_DSEL', 'C2P_GNV', 'C2P_GAS', 'C3-C4_DSEL', 'C3-C4_GNV', 'C3-C4_GAS', 'CC_DSEL', 'CC_GNV', 'CC_GAS', 'ESP_DSEL', 'ESP_GNV', 'ESP_GAS', 'INT_DSEL', 'INT_GNV', 'INT_GAS', 'MB_DSEL', 'M_GAS', 'TX_GNV', 'TX_GAS', 'C5_DSEL', 'C5_GNV', 'C5_GAS']
+	elif Typo == 'NOHAB': 
+		namevehiclefull = ['FID','hora', 'NH>C5_DSEL', 'NH>C5_GNV', 'NH>C5_GAS', 'NHAL_DSEL', 'NHAT_DSEL', 'NHAUT_GNV', 'NHAUT_GAS', 'NHBA_DSEL', 'NHBT_DSEL', 'NHB_DSEL', 'NHC2G_DSEL', 'NHC2G_GNV', 'NHC2G_GAS', 'NHC2P_DSEL', 'NHC2P_GNV', 'NHC2P_GAS', 'NHC3-C4_DSEL', 'NHC3-C4_GNV', 'NHC3-C4_GAS', 'NHCC_DSEL', 'NHCC_GNV', 'NHCC_GAS', 'NHESP_DSEL', 'NHESP_GNV', 'NHESP_GAS', 'NHINT_DSEL', 'NHINT_GNV', 'NHINT_GAS', 'NHMB_DSEL', 'NHM_GAS', 'NHTX_GNV', 'NHTX_GAS', 'NHC5_DSEL', 'NHC5_GNV', 'NHC5_GAS']
+	FID = data.keys()
+
+	cont = 0
+	for ID in FID:
+		nameslinks = data[ID]['link'].keys()
+		Typ = data[ID]['flows'].keys()
+		Typ = Typ[0]
+		namevehicle = sorted(data[ID]['flows'][Typ][0].keys())
+		hours = data[ID]['flows'][Typ].keys()
+
+		if cont == 0:
+			for name in nameslinks:
+				csvsalida.write(name)
+				csvsalida.write(',')
+
+			rest = 0
+			for name in namevehiclefull:
+				if rest == 0:
+					csvsalida.write(name)
+					rest += 1
+				else: 
+					csvsalida.write(',')
+					csvsalida.write(name)
+			csvsalida.write('\n')
+
+			cont += 1
+	 	
+
+		for hour in hours:
+
+		 	for name in nameslinks:
+		 		csvsalida.write(data[ID]['link'][name][0])
+		 		csvsalida.write(',')
+		 	csvsalida.write(str(ID))
+		 	csvsalida.write(',')
+		 	csvsalida.write(str(hour))
+		 	for vehicle in namevehicle:
+		 		csvsalida.write(',')
+		 		csvsalida.write (str(data[ID]['flows'][Typo][hour][vehicle][0]))
+		 	csvsalida.write('\n')
+		data[ID] = None
+	data = None
+	csvsalida.close()	
+
+def writeemsions(data, name, pollutant, Typo, id): 
 
 	#print name
-	name1 = name + '_' + pollutant + '_Habil'
-	name2 = name + '_' + pollutant +'_NHabil'
+	name = name + '_' + pollutant + '_' + Typo
+	#name2 = name + '_' + pollutant +'_NHabil'
 	if id == 1: 
 		folder = os.path.join('..', 'out','emissions', 'link', 'combustion', '')
 	if id == 2:
 		folder = os.path.join('..', 'out','emissions', 'link', 'wear', '')
 
-	csvsalida1 = open(folder + name1 + '.csv', 'w')
-	csvsalida2 = open(folder + name2 + '.csv', 'w')
-	salida1 = csv.writer(csvsalida1, delimiter=',')
-	salida2 = csv.writer(csvsalida2, delimiter=',')
+	csvsalida = open(folder + name + '.csv', 'w')
+	salida = csv.writer(csvsalida, delimiter=',')
 
-	salida1.writerow(['FID_LINK', 'FID_Grilla', 'ROW', 'COL', 'LAT', 'LON', 'Contaminante', 'Hora 0','', 'Hora 1','', 'Hora 2','', 'Hora 3','', 'Hora 4','', 'Hora 5','', 'Hora 6','', 'Hora 7','', 'Hora 8','', 'Hora 9','', 'Hora 10','', 'Hora 11','', 'Hora 12','', 'Hora 13','', 'Hora 14','', 'Hora 15','', 'Hora 16','', 'Hora 17','', 'Hora 18','', 'Hora 19','', 'Hora 20','', 'Hora 21','', 'Hora 22','', 'Hora 23',''])
-	salida2.writerow(['FID_LINK', 'FID_Grilla', 'ROW', 'COL', 'LAT', 'LON', 'Contaminante', 'Hora 0','', 'Hora 1','', 'Hora 2','', 'Hora 3','', 'Hora 4','', 'Hora 5','', 'Hora 6','', 'Hora 7','', 'Hora 8','', 'Hora 9','', 'Hora 10','', 'Hora 11','', 'Hora 12','', 'Hora 13','', 'Hora 14','', 'Hora 15','', 'Hora 16','', 'Hora 17','', 'Hora 18','', 'Hora 19','', 'Hora 20','', 'Hora 21','', 'Hora 22','', 'Hora 23',''])
-	#hours = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23']
-	
+
+	salida.writerow(['FID_LINK', 'FID_Grilla', 'ROW', 'COL', 'LAT', 'LON', 'Contaminante', 'Hora 0','', 'Hora 1','', 'Hora 2','', 'Hora 3','', 'Hora 4','', 'Hora 5','', 'Hora 6','', 'Hora 7','', 'Hora 8','', 'Hora 9','', 'Hora 10','', 'Hora 11','', 'Hora 12','', 'Hora 13','', 'Hora 14','', 'Hora 15','', 'Hora 16','', 'Hora 17','', 'Hora 18','', 'Hora 19','', 'Hora 20','', 'Hora 21','', 'Hora 22','', 'Hora 23',''])
+		
 	FID_LINK = data.keys()
 
 	for ID in FID_LINK:
-		csvsalida1.write(str(int(float(ID))))
-		csvsalida1.write(',')
-		csvsalida1.write(str(data[ID]['General']['FID_Grilla'][0]))
-		csvsalida1.write(',')
-		csvsalida1.write(str(data[ID]['General']['ROW'][0]))
-		csvsalida1.write(',')
-		csvsalida1.write(str(data[ID]['General']['COL'][0]))
-		csvsalida1.write(',')
-		csvsalida1.write(str(data[ID]['General']['LAT'][0]))
-		csvsalida1.write(',')
-		csvsalida1.write(str(data[ID]['General']['LON'][0]))
-		csvsalida1.write(',')
-		csvsalida1.write(pollutant)
-		csvsalida1.write(',')
-
-		csvsalida2.write(str(int(float(ID))))
-		csvsalida2.write(',')
-		csvsalida2.write(str(data[ID]['General']['FID_Grilla'][0]))
-		csvsalida2.write(',')
-		csvsalida2.write(str(data[ID]['General']['ROW'][0]))
-		csvsalida2.write(',')
-		csvsalida2.write(str(data[ID]['General']['COL'][0]))
-		csvsalida2.write(',')
-		csvsalida2.write(str(data[ID]['General']['LAT'][0]))
-		csvsalida2.write(',')
-		csvsalida2.write(str(data[ID]['General']['LON'][0]))
-		csvsalida2.write(',')
-		csvsalida2.write(pollutant)
-		csvsalida2.write(',')
+		csvsalida.write(str(int(float(ID))))
+		csvsalida.write(',')
+		csvsalida.write(str(data[ID]['General']['FID_Grilla'][0]))
+		csvsalida.write(',')
+		csvsalida.write(str(data[ID]['General']['ROW'][0]))
+		csvsalida.write(',')
+		csvsalida.write(str(data[ID]['General']['COL'][0]))
+		csvsalida.write(',')
+		csvsalida.write(str(data[ID]['General']['LAT'][0]))
+		csvsalida.write(',')
+		csvsalida.write(str(data[ID]['General']['LON'][0]))
+		csvsalida.write(',')
+		csvsalida.write(pollutant)
+		csvsalida.write(',')
 		
 		hours = data[ID]['pollutants'].keys()
-		#print hours
 
 		for hour in hours:
 			if hour == 23:
-				csvsalida1.write(str(data[ID]['pollutants'][hour]['Habil'][0]))
-				csvsalida1.write(',')
-				csvsalida1.write(str(data[ID]['pollutants'][hour]['Habil'][1]))
-
-				csvsalida2.write(str(data[ID]['pollutants'][hour]['NHabil'][0]))
-				csvsalida2.write(',')
-				csvsalida2.write(str(data[ID]['pollutants'][hour]['NHabil'][1]))
+				csvsalida.write(str(data[ID]['pollutants'][hour][Typo][0]))
+				csvsalida.write(',')
+				csvsalida.write(str(data[ID]['pollutants'][hour][Typo][1]))
 			
 			else:
-				csvsalida1.write(str(data[ID]['pollutants'][hour]['Habil'][0]))
-				csvsalida1.write(',')
-				csvsalida1.write(str(data[ID]['pollutants'][hour]['Habil'][1]))
-				csvsalida1.write(',')
-
-				csvsalida2.write(str(data[ID]['pollutants'][hour]['NHabil'][0]))
-				csvsalida2.write(',')
-				csvsalida2.write(str(data[ID]['pollutants'][hour]['NHabil'][1]))
-				csvsalida2.write(',')
+				csvsalida.write(str(data[ID]['pollutants'][hour][Typo][0]))
+				csvsalida.write(',')
+				csvsalida.write(str(data[ID]['pollutants'][hour][Typo][1]))
+				csvsalida.write(',')
 
 
-		csvsalida1.write('\n')
-		csvsalida2.write('\n')
-	
-	csvsalida1.close()	
-	csvsalida2.close()
-	data = {}
+
+		csvsalida.write('\n')
+
+	data = None
+	csvsalida.close()	
 
 def PMC(data, noun, folder):
 
@@ -269,16 +291,16 @@ def PMC(data, noun, folder):
 			csvsalida.write(str(data[key]['hours'][hour][0]))
 		csvsalida.write('\n')
 			
-	csvsalida.close()
-	data = {}
+	data = None
+	csvsalida.close()	
 
-def writevehicle(data, noun, pollutant, id):
+def writevehicle(data, noun, pollutant, Typo, id):
 	
 	if id == 1:
 		folder = os.path.join('..', 'out', 'category', 'link', '')
 		
 		keys = data.keys()
-		csvsalida = open(folder + noun + '_' + pollutant + '.csv', 'w')
+		csvsalida = open(folder + noun + '_' + pollutant +'_'+ Typo + '.csv', 'w')
 		salida = csv.writer(csvsalida, delimiter=',')
 		salida.writerow(['FID_LINK', 'FID_Grilla', 'COL', 'ROW', 'LAT', 'LON', 'Type', 'POLNAME' ,'Category','Hora 0', 'Hora 1', 'Hora 2', 'Hora 3', 'Hora 4', 'Hora 5', 'Hora 6', 'Hora 7', 'Hora 8', 'Hora 9', 'Hora 10', 'Hora 11', 'Hora 12', 'Hora 13', 'Hora 14', 'Hora 15', 'Hora 16', 'Hora 17', 'Hora 18', 'Hora 19', 'Hora 20', 'Hora 21', 'Hora 22', 'Hora 23'])		
 		
@@ -310,7 +332,7 @@ def writevehicle(data, noun, pollutant, id):
 						csvsalida.write(',')
 						csvsalida.write(str(float(data[key]['pollutants'][hour][Type][category])))
 					csvsalida.write('\n')				
-			
+		data = None
 		csvsalida.close()
 
 	if id == 2: 
@@ -350,16 +372,16 @@ def writevehicle(data, noun, pollutant, id):
 						csvsalida.write(str(data[key]['Type'][Type][category][hour]))
 
 					csvsalida.write('\n')
-
+		data = None
 		csvsalida.close()
 
-def writecarburant(data, noun, pollutant, id):
+def writecarburant(data, noun, pollutant, Typo,  id):
 	
 	if id == 1:
 		folder = os.path.join('..', 'out', 'carburant', 'link', '')
 		
 		keys = data.keys()
-		csvsalida = open(folder + noun + '_' + pollutant + '.csv', 'w')
+		csvsalida = open(folder + noun + '_' + pollutant+ '_' + Typo + '.csv', 'w')
 		salida = csv.writer(csvsalida, delimiter=',')
 		salida.writerow(['FID_LINK', 'FID_Grilla', 'COL', 'ROW', 'LAT', 'LON', 'Type', 'POLNAME' ,'Category','Hora 0', 'Hora 1', 'Hora 2', 'Hora 3', 'Hora 4', 'Hora 5', 'Hora 6', 'Hora 7', 'Hora 8', 'Hora 9', 'Hora 10', 'Hora 11', 'Hora 12', 'Hora 13', 'Hora 14', 'Hora 15', 'Hora 16', 'Hora 17', 'Hora 18', 'Hora 19', 'Hora 20', 'Hora 21', 'Hora 22', 'Hora 23'])		
 		
@@ -389,7 +411,8 @@ def writecarburant(data, noun, pollutant, id):
 					for hour in hours: 
 						csvsalida.write(',')
 						csvsalida.write(str(float(data[key]['pollutants'][hour][Type][category])))
-					csvsalida.write('\n')				
+					csvsalida.write('\n')
+		data = None				
 		csvsalida.close()
 
 	if id == 2: 
@@ -428,5 +451,62 @@ def writecarburant(data, noun, pollutant, id):
 						csvsalida.write(str(data[key]['Type'][Type][category][hour]))
 
 					csvsalida.write('\n')
-
+		data = None
 		csvsalida.close()
+
+def writedeparture(data, noun, poll, Typo):
+	#print data
+	folder = os.path.join('..', 'out', 'departure', '')
+	keys = data.keys()
+	csvsalida = open(folder + noun + '_' + poll+ '_' + Typo + '.csv', 'w')
+	salida = csv.writer(csvsalida, delimiter=',')
+
+	names = ['FID_LINK', 'FID_Grilla', 'LAT', 'LON', 'ROW', 'COL', 'hora']
+	#csvsalida.write()
+	keys = data.keys()
+	cont = 0
+
+	for key in keys: 
+		if cont == 0:
+			names2 = data[key]['pollutants'][0][Typo].keys()
+			names = names + names2
+			cont2 = 0
+			for name in names:
+				if cont2 == 0: 
+					csvsalida.write(name)
+					cont2 = 1
+				elif cont2 == 1:
+					csvsalida.write(',')
+					csvsalida.write(name)
+			csvsalida.write('\n')
+			cont = 1 
+
+		hours = data[key]['pollutants'].keys()
+		for hour in hours:
+			csvsalida.write(str(key))
+			csvsalida.write(',')
+			csvsalida.write(str(data[key]['General']['FID_Grilla'][0]))
+			csvsalida.write(',')
+			csvsalida.write(str(data[key]['General']['LAT'][0]))
+			csvsalida.write(',')
+			csvsalida.write(str(data[key]['General']['LON'][0]))
+			csvsalida.write(',')
+			csvsalida.write(str(data[key]['General']['ROW'][0]))
+			csvsalida.write(',')
+			csvsalida.write(str(data[key]['General']['COL'][0]))
+			csvsalida.write(',')
+			csvsalida.write(str(hour))
+			for name in names2:
+				csvsalida.write(',')
+				csvsalida.write(str(data[key]['pollutants'][hour][Typo][name][0]))
+			csvsalida.write('\n')
+
+
+
+
+
+		
+
+
+
+

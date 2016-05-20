@@ -44,6 +44,9 @@ def pmc(folder):
 		if 'PM10' in name: 
 			listEmitionsPM10.append(name)
 
+	#print listEmitionsPM25
+	#print listEmitionsPM10
+
 	for i in range (0, len(listEmitionsPM25)):
 		archivePM25 = folder + listEmitionsPM25[i]
 		archivePM10 = folder + listEmitionsPM10[i]
@@ -130,19 +133,66 @@ def testingpmc(folder):
 def brindingpmc(folder): 
 	
 	listout = listaCSV(folder)
+	listHabil = []
+	listNHabil = []
 	cont = 0
 	
 	folderSave = os.path.join('..', 'out', 'emissions', 'grid', 'PMC', 'Full', '')
-	if 'Wear' in folder: 
-		csvsalida = open(folderSave + 'Wear' + '_' +'PMC_FULL.csv', 'w')
-	elif 'Combustion' in folder: 
-		csvsalida = open(folderSave + 'Combustion' + '_' +'PMC_FULL.csv', 'w')
+	for archiv in listout:
+		if '_NHabil' in archiv: 
+			listNHabil.append(archiv)
+		elif '_Habil' in archiv: 
+			listHabil.append(archiv)
 
-	salida = csv.writer(csvsalida, delimiter=',')#, quoting=csv.QUOTE_ALL
-	salida.writerow(['ROW', 'COL', 'LAT', 'LON', 'POLNAME', 'UNIT', 'E00h', 'E01h', 'E02h', 'E03h', 'E04h', 'E05h', 'E06h' ,'E07h', 'E08h', 'E09h', 'E10h', 'E11h', 'E12h', 'E13h', 'E14h', 'E15h', 'E16h', 'E17h', 'E18h', 'E19h', 'E20h', 'E21h', 'E22h', 'E23h', 'E24h'])
+	if 'Wear' in folder: 
+		folderSave = os.path.join(folderSave + 'Wear', '')
+		
+	elif 'Combustion' in folder: 
+		folderSave = os.path.join(folderSave + 'Combustion', '')
+		
+
+	names = ['ROW', 'COL', 'LAT', 'LON', 'POLNAME', 'UNIT', 'E00h', 'E01h', 'E02h', 'E03h', 'E04h', 'E05h', 'E06h' ,'E07h', 'E08h', 'E09h', 'E10h', 'E11h', 'E12h', 'E13h', 'E14h', 'E15h', 'E16h', 'E17h', 'E18h', 'E19h', 'E20h', 'E21h', 'E22h', 'E23h', 'E24h']
 	
-	for archiv in listout: 
+	csvsalida = open(folderSave + 'Habil_PMC_FULL.csv', 'w')
+	for name in names: 
+		if name == 'ROW': 
+			csvsalida.write(name)
+		else: 
+			csvsalida.write(',')
+			csvsalida.write(name)
+	csvsalida.write('\n')
+
+	for archiv in listHabil: 
 		archive = folder + archiv
-		matriz = convertCSVMatriz (archive)
+		matriz = convertCSVMatriz(archive)
 		for i in range(1, matriz.shape[0]):
-			salida.writerow(matriz[i,:])
+			for x in range(0, matriz.shape[1]):
+				if x == 0: 
+					csvsalida.write(matriz[i][x])
+				else: 
+					csvsalida.write(',')
+					csvsalida.write(matriz[i][x])
+			csvsalida.write('\n')
+	
+	csvsalida = open(folderSave + 'NHabil_PMC_FULL.csv', 'w')
+	for name in names: 
+		if name == 'ROW': 
+			csvsalida.write(name)
+		else: 
+			csvsalida.write(',')
+			csvsalida.write(name)
+	csvsalida.write('\n')
+
+
+	for archiv in listNHabil: 
+		archive = folder + archiv
+		matriz = convertCSVMatriz(archive)
+		for i in range(1, matriz.shape[0]):
+			for x in range(0, matriz.shape[1]):
+				if x == 0: 
+					csvsalida.write(matriz[i][x])
+				else: 
+					csvsalida.write(',')
+					csvsalida.write(matriz[i][x])
+			csvsalida.write('\n')
+

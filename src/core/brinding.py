@@ -35,26 +35,12 @@ def brinding(flows, links, noun):
 	
 	data = {}
 	Mdata = convertXLSCSV(links)
-	MFlows = convertCSVMatriz(flows)
-
 	headData = Mdata[0,:] 
-	headFlows = MFlows[0,:]
-	
+		
 	index = 0
 	for name in headData: 
 		if name == 'FID_LINK': 
 			colLinkID = index
-		index += 1
-
-	index = 0
-
-	for name in headFlows:
-		if name == 'IDEstacion':
-			colIDEstation = index
-		if name == 'hora':
-			colhour = index
-		if name == 'Tipo':
-			colType = index
 		index += 1
 
 	for y in range(1, Mdata.shape[0]):
@@ -80,6 +66,20 @@ def brinding(flows, links, noun):
 				entryname[name] = []
 
 			entryname[name].append(Mdata[y][x])
+
+	Mdata = None
+	MFlows = convertCSVMatriz(flows)
+	headFlows = MFlows[0,:]
+
+	index = 0
+	for name in headFlows:
+		if name == 'IDEstacion':
+			colIDEstation = index
+		if name == 'hora':
+			colhour = index
+		if name == 'Tipo':
+			colType = index
+		index += 1
 
 	for y in range(1, MFlows.shape[0]):
 		IDflowsEstation = int(float(MFlows[y][colIDEstation]))
@@ -113,42 +113,28 @@ def brinding(flows, links, noun):
 				 		entryVehicle[headFlows] = []
 				
 				 	entryVehicle[headFlows].append(MFlows[y][x])
-
+	MFlows = None
 	folder = os.path.join("..", 'data', 'datalink', '')
 	writebinding(folder, data, noun)
 
-def brindingsecondary(flows, links):
+def brindingsecondary(flows, links, typ):
 
 	data = {}
-	Mdata = convertXLSCSV(links)
-	MFlows = convertCSVMatriz(flows)
-	
+	print 'Start', typ
 	Intermedia = 0.37
 	Local = 0.22
-	Activity = ['L', 'AUT_Gas', 'AUT_Gas', 'AUT_GNV', 'CC_Gas', 'CC_Dsel', 'CC_GNV', 'TX_Gas', 'TX_GNV', 'C', 'MB_Dsel', 'ESP', 'ESP_Gas', 'ESP_Dsel', 'ESP_GNV', 'M', 'M_Gas']
+	Activity = ['AUT_Gas', 'AUT_Gas', 'AUT_GNV', 'CC_Gas', 'CC_Dsel', 'CC_GNV', 'TX_Gas', 'TX_GNV', 'MB_Dsel', 'ESP_Gas', 'ESP_Dsel', 'ESP_GNV', 'M_Gas']
 	ResidencialAct = 0.22
-	NotActivity = [ 'B', 'B_Dsel', 'C2P', 'C2P_Dsel', 'C2P_Gas', 'C2P_GNV', 'BT', 'BT_Dsel', 'AL', 'AL_Dsel', 'AT', 'AT_Dsel', 'BA', 'BA_Dsel', 'INT', 'INT_Dsel', 'INT_Gas','INT_GNV', 'C2G', 'C2G_Dsel', 'C2G_Gas', 'C2G_GNV', 'C3-C4', 'C3-C4_Dsel', 'C3-C4_Gas', 'C3-C4_GNV', 'C5', 'c5_Dsel', 'c5_Gas', 'c5_GNV', '>C5', '>c5_Dsel', '>c5_Gas', '>c5_GNV']
+	NotActivity = [ 'B_Dsel', 'C2P_Dsel', 'C2P_Gas', 'C2P_GNV', 'BT_Dsel', 'AL_Dsel', 'AT_Dsel', 'BA_Dsel', 'INT_Dsel', 'INT_Gas','INT_GNV', 'C2G_Dsel', 'C2G_Gas', 'C2G_GNV', 'C3-C4_Dsel', 'C3-C4_Gas', 'C3-C4_GNV', 'c5_Dsel', 'c5_Gas', 'c5_GNV', '>c5_Dsel', '>c5_Gas', '>c5_GNV']
 	ResidencialNotAct = 0
 
-
-	headData = Mdata[0,:] 
-	headFlows = MFlows[0,:]
+	Mdata = convertXLSCSV(links)
+	headData = Mdata[0,:] 	
 	
 	index = 0
 	for name in headData: 
 		if name == 'FID_LINK': 
 			colLinkID = index
-		index += 1
-
-	index = 0
-
-	for name in headFlows:
-		if name == 'IDEstacion':
-			colIDEstation = index
-		if name == 'hora':
-			colhour = index
-		if name == 'Tipo':
-			colType = index
 		index += 1
 
 	for y in range(1, Mdata.shape[0]):
@@ -168,12 +154,25 @@ def brindingsecondary(flows, links):
 
 		entryname = entrygrid['link']
 
-		for x in range(1, Mdata.shape[1]):
+		for x in range(0, Mdata.shape[1]):
 			name = headData[x]
 			if entryname.get(name) is None:
 				entryname[name] = []
 
 			entryname[name].append(Mdata[y][x])
+
+	Mdata = None
+	MFlows = convertCSVMatriz(flows)
+	headFlows = MFlows[0,:]
+	index = 0
+	for name in headFlows:
+		if name == 'IDEstacion':
+			colIDEstation = index
+		if name == 'hora':
+			colhour = index
+		if name == 'Tipo':
+			colType = index
+		index += 1
 
 	for y in range(1, MFlows.shape[0]):
 		IDflowsEstation = int(float(MFlows[y][colIDEstation]))
@@ -181,13 +180,12 @@ def brindingsecondary(flows, links):
 
 		FID = data.keys()
 
-		for ID in FID:
-			
+		for ID in FID:		
 			IDdataEstation = int(float(data[ID]['link']['IDEstacion'][0]))
 
 			if IDdataEstation == IDflowsEstation:
-				typ = MFlows[y][colType]
 				
+				typo = MFlows[y][colType]
 				entryType = data[ID]['flows']
 				
 				if entryType.get(typ) is None: 
@@ -199,20 +197,18 @@ def brindingsecondary(flows, links):
 					entryhour[hr] = {}
 
 				entryVehicle = entryhour[hr]
-
-
-				for x in range(colhour+1, MFlows.shape[1]):
-				 	headFlows = MFlows[0][x]
-				 	if entryVehicle.get(headFlows) is None:
-				 		entryVehicle[headFlows] = []
-				
-				 	entryVehicle[headFlows].append(MFlows[y][x])
-
+				#print typo, typ
+				if typo == typ:
+					for x in range(colhour+1, MFlows.shape[1]):
+					 	headFlows = MFlows[0][x]
+					 	if entryVehicle.get(headFlows) is None:
+					 		entryVehicle[headFlows] = []
+					 		entryVehicle[headFlows].append(MFlows[y][x])
+		
+	MFlows = None	
 	FID = data.keys()
-	
 	for ID in FID:
 		clasifi = data[ID]['link']['CLASIFI_SU'][0]
-		print 'Trabajando con Link #', ID
 		types = data[ID]['flows'].keys()
 		for typ in types:
 			hour = data[ID]['flows'][typ].keys()
@@ -228,16 +224,15 @@ def brindingsecondary(flows, links):
 						data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * Intermedia 
 
 				if clasifi == 'Residencial':
-
 					for Vehicle in Activity: 
 						data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * ResidencialAct
 
 					for Vehicle in NotActivity:
 						data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * ResidencialNotAct
 
-
+	#print data
 	folder = os.path.join("..", "data", "datalink", '')
-	writebinding(folder, data, "secundary")
+	writeBrindingSecondary(folder, data, "secundary", typ)
 
 def brindingfinality(folderbrinding):
 	
@@ -294,6 +289,7 @@ def brindingfinality(folderbrinding):
 			cod = matriz[i][0] + matriz[i][1]
 			salida1.writerow(matriz[i,:])
 
+		matriz = None
 	csvsalida1.close()
 
 	cont = 0
@@ -308,13 +304,12 @@ def brindingfinality(folderbrinding):
 		for i in range(1, matriz.shape[0]):
 			salida2.writerow(matriz[i,:])
 
+		matriz = None
 	csvsalida2.close()
 
 def final(Archive):
 	
 	data = {}
-
-	#print Archive
 	matriz = convertCSVMatriz(Archive)
 	head = matriz[0,:]
 	index = 0
@@ -363,6 +358,7 @@ def final(Archive):
 			data[keys]['hours'][hour].append(matriz[i][x])
 			hour += 1
 
+	matriz = None
 	keys = data.keys()
 	for key in keys: 
 		hours = data[key]['hours'].keys()
@@ -392,13 +388,12 @@ def final(Archive):
 		csvsalida.write(data[key]['GENERAL']['POLNAME'][0])
 		csvsalida.write(',')
 		csvsalida.write(data[key]['GENERAL']['UNIT'][0])
-		csvsalida.write(',')
+		#csvsalida.write(',')
 		hours = data[key]['hours'].keys()
 		for hour in hours:
-			csvsalida.write(str(data[key]['hours'][hour][0]))
 			csvsalida.write(',')
+			csvsalida.write(str(data[key]['hours'][hour][0]))
 		csvsalida.write('\n')
-
 	csvsalida.close ()
 
 def brindingspeciation(folder, noun): 
@@ -571,3 +566,50 @@ def writebrindingspeciation(listout, noun, identy, folder):
 		matriz = convertCSVMatriz (archive)
 		for i in range(1, matriz.shape[0]):
 			salida.writerow(matriz[i,:])
+
+		matriz = None
+
+def unions(archive1, archive2): 
+	Marchive1 = convertCSVMatriz(archive1)
+	Marchive2 = convertCSVMatriz(archive2)
+	name = Marchive1[0,:]
+	index = 0
+	for value in name: 
+		if value == 'hora': 
+			colIF = index+1
+		index += 1
+	name2 = Marchive2[0,colIF:]
+	newname = []
+	for noun in name: 
+		newname.append(noun)
+
+	for noun in name2: 
+		newname.append(noun)
+
+	name = None
+	name2 = None
+
+	folder = os.path.join('..', 'data', 'datalink', '')
+	csvsalida = open(folder + 'secundarybrinding.csv', 'w')
+	salida = csv.writer(csvsalida, delimiter=',')
+	salida.writerow(newname)
+	
+	for i in range(1, Marchive1.shape[0]):
+		for x in range(0, Marchive1.shape[1]):
+			if x == 0: 
+				csvsalida.write(Marchive1[i][x])
+			else: 
+				csvsalida.write(',')
+				csvsalida.write(Marchive1[i][x])
+			
+		
+		for x in range(colIF, Marchive2.shape[1]):
+				csvsalida.write(',')
+				csvsalida.write(Marchive2[i][x])
+					
+
+		csvsalida.write('\n')
+
+	Marchive1 = None
+	Marchive2 = None
+	
