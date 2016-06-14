@@ -4,7 +4,7 @@
 #created by @ceapalaciosal
 #under code Creative Commons
 
-from excelmatriz import *
+from matriz import *
 from wcsv import *
 import json
 import os
@@ -113,9 +113,9 @@ def binding(flows, links, noun):
 				 	entryVehicle[headFlows].append(MFlows[y][x])
 	MFlows = None
 	if noun == 'principal': 
-		folder = os.path.join("..", 'data', 'in','datalink', 'PRINCIPAL','')
+		folder = os.path.join("..", 'data', 'in','link', 'PRINCIPAL','')
 	elif noun == 'TM': 
-		folder = os.path.join("..", 'data', 'in','datalink', 'TM','')
+		folder = os.path.join("..", 'data', 'in','link', 'TM','')
 	#elif noun == 'HABIL' or noun == 'NOHAB': 
 	#	folder = os.path.join("..", 'data', 'in', 'datalink', 'SECUNDARIAS','')
 	
@@ -124,7 +124,7 @@ def binding(flows, links, noun):
 def bindingsecondary(flows, links, typ):
 
 	data = {}
-	print 'Start', typ
+	#print 'Start', typ
 	Intermedia = 0.37
 	Local = 0.22
 	Activity = ['AUT_Gas', 'AUT_Gas', 'AUT_GNV', 'CC_Gas', 'CC_Dsel', 'CC_GNV', 'TX_Gas', 'TX_GNV', 'MB_Dsel', 'ESP_Gas', 'ESP_Dsel', 'ESP_GNV', 'M_Gas']
@@ -232,10 +232,10 @@ def bindingsecondary(flows, links, typ):
 					for Vehicle in NotActivity:
 						data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * ResidencialNotAct
 
-	folder = os.path.join('..', 'data', 'in', 'datalink', 'SECUNDARIAS', '')
+	folder = os.path.join('..', 'data', 'in', 'link', 'SECUNDARIAS', '')
 	writeBrindingSecondary(folder, data, "secundary", typ)
 
-def brindingfinality(folderbrinding):
+def bindingfinality(folderbrinding):
 	
 	folder2 = os.path.join('..', 'data', 'out', 'emissions', '')
 	if 'wear' in folderbrinding:
@@ -396,8 +396,8 @@ def final(Archive):
 		csvsalida.write('\n')
 	csvsalida.close ()
 
-def brindingspeciation(folder, noun): 
-	print folder
+def bindingspeciation(folder, noun): 
+	#print folder
 	listaspeciation = listaCSV(folder)
 
 	if noun == 'combustion':
@@ -471,10 +471,10 @@ def brindingspeciation(folder, noun):
 				listPM25.append(data)
 
 
-		writebrindingspeciation(listCH4, noun, 'CH4_Habil' , folder)	
-		writebrindingspeciation(listBEN, noun, 'BEN_Habil' , folder)	
-		writebrindingspeciation(listPM10, noun, 'PM10_Habil' , folder)	
-		writebrindingspeciation(listPM25, noun, 'PM25_Habil' , folder)	
+		writebindingspeciation(listCH4, noun, 'CH4_Habil' , folder)	
+		writebindingspeciation(listBEN, noun, 'BEN_Habil' , folder)	
+		writebindingspeciation(listPM10, noun, 'PM10_Habil' , folder)	
+		writebindingspeciation(listPM25, noun, 'PM25_Habil' , folder)	
 
 		listCH4 = []
 		listBEN = []
@@ -490,20 +490,20 @@ def brindingspeciation(folder, noun):
 			if 'PM2.5' in data:
 				listPM25.append(data)
 
-		writebrindingspeciation(listCH4, noun, 'CH4_NHabil' , folder)	
-		writebrindingspeciation(listBEN, noun, 'BEN_NHabil' , folder)	
-		writebrindingspeciation(listPM10, noun, 'PM10_NHabil' , folder)	
-		writebrindingspeciation(listPM25, noun, 'PM25_NHabil' , folder)	
+		writebindingspeciation(listCH4, noun, 'CH4_NHabil' , folder)	
+		writebindingspeciation(listBEN, noun, 'BEN_NHabil' , folder)	
+		writebindingspeciation(listPM10, noun, 'PM10_NHabil' , folder)	
+		writebindingspeciation(listPM25, noun, 'PM25_NHabil' , folder)	
 		
 
-		writebrindingspeciation(archivesSpeciesHabil, noun, 'species_PM25_Habil', folder)
-		writebrindingspeciation(achivesSpeciesNHabil, noun, 'species_PM25_NHabil', folder)
+		writebindingspeciation(archivesSpeciesHabil, noun, 'species_PM25_Habil', folder)
+		writebindingspeciation(achivesSpeciesNHabil, noun, 'species_PM25_NHabil', folder)
 		
-		writebrindingspeciation(archivesVOCHabil, noun, 'species_VOC_Habil', folder)			
-		writebrindingspeciation(archivesVOCNHabil, noun, 'species_VOC_NHabil', folder)			
+		writebindingspeciation(archivesVOCHabil, noun, 'species_VOC_Habil', folder)			
+		writebindingspeciation(archivesVOCNHabil, noun, 'species_VOC_NHabil', folder)			
 
-		writebrindingspeciation(archivesGASHabil, noun, 'CO2_CO_SO2_Habil', folder)	
-		writebrindingspeciation(archivesGASNHabil, noun, 'CO2_CO_SO2_NHabil', folder)	
+		writebindingspeciation(archivesGASHabil, noun, 'CO2_CO_SO2_Habil', folder)	
+		writebindingspeciation(archivesGASNHabil, noun, 'CO2_CO_SO2_NHabil', folder)	
 
 	if noun == 'wear':
 		archivesSpeciesHabilTire = []
@@ -536,21 +536,21 @@ def brindingspeciation(folder, noun):
 		folderBrake = os.path.join(folder, 'BRAKE', '')
 		folderTire = os.path.join(folder, 'TIRE', '')
 
-		writebrindingspeciation(archivesSpeciesHabilBrake, noun, 'species_PM25_Habil_BRAKE', folder)
-		writebrindingspeciation(archivesSpeciesHabilTire, noun, 'species_PM25_Habil_TIRE', folder)
+		writebindingspeciation(archivesSpeciesHabilBrake, noun, 'species_PM25_Habil_BRAKE', folder)
+		writebindingspeciation(archivesSpeciesHabilTire, noun, 'species_PM25_Habil_TIRE', folder)
 		
-		writebrindingspeciation(achivesSpeciesNHabilBrake, noun, 'species_PM25_NHabil_BRAKE', folder)
-		writebrindingspeciation(achivesSpeciesNHabilTire, noun, 'species_PM25_NHabil_TIRE', folder)
+		writebindingspeciation(achivesSpeciesNHabilBrake, noun, 'species_PM25_NHabil_BRAKE', folder)
+		writebindingspeciation(achivesSpeciesNHabilTire, noun, 'species_PM25_NHabil_TIRE', folder)
 
-def writebrindingspeciation(listout, noun, identy, folder): 
+def writebindingspeciation(listout, noun, identy, folder): 
 	
 	if noun == 'combustion':
-		foldersave = os.path.join('..', 'data', 'out','speciation', 'brinding', 'combustion', '')
+		foldersave = os.path.join('..', 'data', 'out','speciation', 'binding', 'combustion', '')
 	elif noun == 'wear':
 		if 'BRAKE' in identy:
-			foldersave = os.path.join('..', 'data', 'out','speciation', 'brinding', 'wear', 'BRAKE', '')
+			foldersave = os.path.join('..', 'data', 'out','speciation', 'binding', 'wear', 'BRAKE', '')
 		elif 'TIRE' in identy: 
-			foldersave = os.path.join('..', 'data', 'out','speciation', 'brinding', 'wear', 'TIRE', '')
+			foldersave = os.path.join('..', 'data', 'out','speciation', 'binding', 'wear', 'TIRE', '')
 
 
 	csvsalida = open(foldersave + identy + '_SPC_Full.csv', 'w')
@@ -569,7 +569,7 @@ def writebrindingspeciation(listout, noun, identy, folder):
 		matriz = None
 
 def unions(archive1, archive2): 
-	print archive1
+	#print archive1
 	Marchive1 = convertCSVMatriz(archive1)
 	Marchive2 = convertCSVMatriz(archive2)
 	
@@ -590,7 +590,7 @@ def unions(archive1, archive2):
 	name = None
 	name2 = None
 
-	folder = os.path.join('..', 'data', 'in','datalink', 'SECUNDARIAS', '')
+	folder = os.path.join('..', 'data', 'in','link', 'SECUNDARIAS', '')
 	
 	csvsalida = open(folder + 'secundaryBinding.csv', 'w')
 	salida = csv.writer(csvsalida, delimiter=',')

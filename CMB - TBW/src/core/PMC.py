@@ -5,7 +5,7 @@
 #under code Creative Commons
 
 import os
-from excelmatriz import *
+from matriz import *
 from wcsv import *
 import json
 
@@ -123,7 +123,7 @@ def testingpmc(folder):
 				else: 
 					pass
 
-def brindingpmc(folder): 
+def bindingpmc(folder): 
 	
 	listout = listaCSV(folder)
 	listHabil = []

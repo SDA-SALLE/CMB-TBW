@@ -9,40 +9,39 @@
 import os
 import sys
 sys.path.append('core')
-from emitionmovil import *
+from emition import *
 from PMC import *
 from clear import *
 
 folderout = os.path.join ('..', 'data','out' ,'')
 clear(folderout)
 
-print 'empieza proceso'
+#print 'empieza proceso'
 convert()
 FactorEmissions = os.path.join('..', 'data', 'in','FEmition', 'FactoresEmision.xlsx')
 FactoresEmissionBrake = os.path.join('..', 'data', 'in','FEmition', 'FEBrake.xlsx')
 
 
-principal = os.path.join('..', 'data', 'in','datalink', 'PRINCIPAL', 'principalbinding.csv')
+principal = os.path.join('..', 'data', 'in','link', 'PRINCIPAL', 'principalbinding.csv')
 calculation(principal, 'Principal', FactorEmissions, 'Habil')
 calculation(principal, 'Principal', FactorEmissions, 'NHabil')
 calculation(principal, 'Principal', FactoresEmissionBrake, 'Habil')
 calculation(principal, 'Principal', FactoresEmissionBrake, 'NHabil')
-print 'Calculo para Principales Habil y No Habil Listos'
+#print 'Calculo para Principales Habil y No Habil Listos'
 
-TM = os.path.join('..', 'data', 'in','datalink', 'TM', 'TMbinding.csv')
+TM = os.path.join('..', 'data', 'in','link', 'TM', 'TMbinding.csv')
 calculation(TM, 'TM', FactorEmissions, 'Habil')
 calculation(TM, 'TM', FactorEmissions, 'NHabil')
 calculation(TM, 'TM', FactoresEmissionBrake, 'Habil')
 calculation(TM, 'TM', FactoresEmissionBrake, 'NHabil')
-print 'Calculo para Transmilenio Habil y No Habil Listos'
+#print 'Calculo para Transmilenio Habil y No Habil Listos'
 
-
-secundarias = os.path.join('..', 'data', 'in','datalink', 'SECUNDARIAS','secundarybinding.csv')
+secundarias = os.path.join('..', 'data', 'in','link', 'SECUNDARIAS','secundarybinding.csv')
 calculation(secundarias, 'Secundary', FactorEmissions, 'Habil')
 calculation(secundarias, 'Secundary', FactorEmissions, 'NHabil')
 calculation(secundarias, 'Secundary', FactoresEmissionBrake, 'Habil')
 calculation(secundarias, 'Secundary', FactoresEmissionBrake, 'NHabil')
-print 'Calculo para Secundarias Habil y No Habil Listos'
+#print 'Calculo para Secundarias Habil y No Habil Listos'
 
 folderdeparture = os.path.join('..', 'data','out', 'departure', '', '')
 listFilesDeparture = list(folderdeparture)	
@@ -85,10 +84,10 @@ for File in listFilesEmissions:
 	finality(folderwear, File)
 
 gridCombustion = os.path.join('..', 'data','out', 'emissions', 'grid', 'combustion', '')
-brindingfinality(gridCombustion)
+bindingfinality(gridCombustion)
 
 gridWear = os.path.join('..', 'data','out', 'emissions', 'grid', 'wear', '')
-brindingfinality(gridWear)
+bindingfinality(gridWear)
 
 ArchiveHabilWear = os.path.join('..', 'data','out', 'emissions', 'emissionsHabilWear.csv')
 ArchiveHabilConbustion = os.path.join('..', 'data','out', 'emissions', 'emissionsHabilConbustion.csv')
@@ -120,36 +119,35 @@ speciationcombustion(foldercombustion)
 #brinding speciation in folder /out/speciation/brinding
 print 'Start brinding speciation'
 foldercombustion = os.path.join('..', 'data','out', 'speciation', 'combustion', '')
-brindingspeciation(foldercombustion, 'combustion')	
+bindingspeciation(foldercombustion, 'combustion')	
 
 folderwear = os.path.join('..', 'data','out', 'speciation', 'wear', '')
-brindingspeciation(folderwear, 'wear')	
+bindingspeciation(folderwear, 'wear')	
 
-foldercombustion = os.path.join('..', 'data','out', 'speciation', 'brinding', 'combustion', '')
+foldercombustion = os.path.join('..', 'data','out', 'speciation', 'binding', 'combustion', '')
 archivescombustion = list(foldercombustion)
 
 for combustion in archivescombustion:
 	archive = foldercombustion + combustion
-	#print archive
 	final(archive)
 
-folderwearTIRE = os.path.join('..', 'data','out', 'speciation', 'brinding', 'wear', 'TIRE', '')
+folderwearTIRE = os.path.join('..', 'data','out', 'speciation', 'binding', 'wear', 'TIRE', '')
 archiveswearTIRE = list(folderwearTIRE)
 
 for wear in archiveswearTIRE:
 	archive = folderwearTIRE + wear
 	final(archive)
 
-folderwearBRAKE = os.path.join('..', 'data','out', 'speciation', 'brinding', 'wear', 'BRAKE', '')
+folderwearBRAKE = os.path.join('..', 'data','out', 'speciation', 'binding', 'wear', 'BRAKE', '')
 archiveswearBRAKE = list(folderwearBRAKE)
 
 for wear in archiveswearBRAKE:
 	archive = folderwearBRAKE + wear
 	final(archive)
 
-print 'brinding speciation OK'
+print 'binding speciation OK'
 print '*------------------------------------*'
-print 'Archivo NoHabil Listo'
+#print 'Archivo NoHabil Listo'
 print 'End'
 
 categoryVechiclegrid()
@@ -160,7 +158,7 @@ folderconbustion = os.path.join('..', 'data','out','emissions', 'grid', 'combust
 pmc(folderconbustion)
 folderout = os.path.join('..', 'data','out','emissions', 'grid', 'PMC', 'Combustion', '')
 testingpmc(folderout)
-brindingpmc(folderout)
+bindingpmc(folderout)
 listapmc = list(folderout)
 for archive in listapmc:
 	archive = folderout + archive
@@ -170,7 +168,7 @@ folderwear = os.path.join('..', 'data','out','emissions', 'grid', 'wear', '')
 pmc(folderwear)
 folderout = os.path.join('..', 'data','out','emissions', 'grid', 'PMC', 'Wear', '')
 testingpmc(folderout)
-brindingpmc(folderout)
+bindingpmc(folderout)
 listapmc = list(folderout)
 for archive in listapmc:
 	archive = folderout + archive

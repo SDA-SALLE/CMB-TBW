@@ -5,7 +5,7 @@
 
 import os
 import xlrd
-from excelmatriz import *
+from matriz import *
 
 def listaCSV(direccion):
 
