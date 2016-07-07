@@ -12,9 +12,9 @@ def wcsv(data, name, folder):
 	salida = csv.writer(csvsalida, delimiter=',')
 	
 	if 'combustion' in folder:
-		FEmissions = os.path.join('..', 'data', 'in','FEmition', 'FactoresEmision.xlsx')
+		FEmissions = os.path.join('..', 'data', 'in','EmissionFactors', 'FactoresEmision.xlsx')
 	if 'wear' in folder:
-		FEmissions = os.path.join('..', 'data', 'in', 'FEmition', 'FEBrake.xlsx')
+		FEmissions = os.path.join('..', 'data', 'in', 'EmissionFactors', 'FEBrake.xlsx')
 	
 	workbook = xlrd.open_workbook(FEmissions)
 	names = workbook.sheet_by_index(1)
@@ -149,7 +149,7 @@ def writebinding(folder, data, name):
 	data = None
 	csvsalida.close()
 
-def writeBrindingSecondary(folder, data, name, Typo):
+def writeBindingSecondary(folder, data, name, Typo):
 
 	csvsalida = open(folder + name + '_' + Typo + '_' +'binding.csv', 'w')
 	if Typo == 'HABIL':

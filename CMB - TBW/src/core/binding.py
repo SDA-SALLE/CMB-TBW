@@ -233,7 +233,7 @@ def bindingsecondary(flows, links, typ):
 						data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * ResidencialNotAct
 
 	folder = os.path.join('..', 'data', 'in', 'link', 'SECUNDARIAS', '')
-	writeBrindingSecondary(folder, data, "secundary", typ)
+	writeBindingSecondary(folder, data, "secundary", typ)
 
 def bindingfinality(folderbrinding):
 	

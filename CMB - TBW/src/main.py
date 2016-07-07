@@ -18,25 +18,25 @@ clear(folderout)
 
 #print 'empieza proceso'
 convert()
-FactorEmissions = os.path.join('..', 'data', 'in','FEmition', 'FactoresEmision.xlsx')
-FactoresEmissionBrake = os.path.join('..', 'data', 'in','FEmition', 'FEBrake.xlsx')
+FactorEmissions = os.path.join('..', 'data', 'in','EmissionFactors', 'FactoresEmision.xlsx')
+FactoresEmissionBrake = os.path.join('..', 'data', 'in','EmissionFactors', 'FEBrake.xlsx')
 
 
-principal = os.path.join('..', 'data', 'in','link', 'PRINCIPAL', 'principalbinding.csv')
+principal = os.path.join('..', 'data', 'in','Link', 'PRINCIPAL', 'principalbinding.csv')
 calculation(principal, 'Principal', FactorEmissions, 'Habil')
 calculation(principal, 'Principal', FactorEmissions, 'NHabil')
 calculation(principal, 'Principal', FactoresEmissionBrake, 'Habil')
 calculation(principal, 'Principal', FactoresEmissionBrake, 'NHabil')
 #print 'Calculo para Principales Habil y No Habil Listos'
 
-TM = os.path.join('..', 'data', 'in','link', 'TM', 'TMbinding.csv')
+TM = os.path.join('..', 'data', 'in','Link', 'TM', 'TMbinding.csv')
 calculation(TM, 'TM', FactorEmissions, 'Habil')
 calculation(TM, 'TM', FactorEmissions, 'NHabil')
 calculation(TM, 'TM', FactoresEmissionBrake, 'Habil')
 calculation(TM, 'TM', FactoresEmissionBrake, 'NHabil')
 #print 'Calculo para Transmilenio Habil y No Habil Listos'
 
-secundarias = os.path.join('..', 'data', 'in','link', 'SECUNDARIAS','secundarybinding.csv')
+secundarias = os.path.join('..', 'data', 'in','Link', 'SECUNDARIAS','secundarybinding.csv')
 calculation(secundarias, 'Secundary', FactorEmissions, 'Habil')
 calculation(secundarias, 'Secundary', FactorEmissions, 'NHabil')
 calculation(secundarias, 'Secundary', FactoresEmissionBrake, 'Habil')
@@ -100,14 +100,14 @@ final(ArchiveNHabilWear)
 final(ArchiveNHabilConbustion)
 
 print 'speciation PM2.5 BRAKE'
-archivespeciation = os.path.join('..', 'data', 'in', 'speciation', 'BRAKE_SCP_PROF_PM25.xlsx')
+archivespeciation = os.path.join('..', 'data', 'in', 'Speciation', 'BRAKE_SCP_PROF_PM25.xlsx')
 folderwear = os.path.join('..', 'data','out', 'emissions', 'grid', 'wear', '')
 speciationwear(archivespeciation, folderwear)
 print 'Testing'
 testing('PM2.5 BRAKE')
 
 print 'speciation PM2.5 TIRE'
-archivespeciation = os.path.join('..', 'data', 'in', 'speciation', 'TIRE_SCP_PROF_PM25.xlsx')
+archivespeciation = os.path.join('..', 'data', 'in', 'Speciation', 'TIRE_SCP_PROF_PM25.xlsx')
 folderwear = os.path.join('..', 'data','out', 'emissions', 'grid', 'wear', '')
 speciationwear(archivespeciation, folderwear)
 print 'Testing'

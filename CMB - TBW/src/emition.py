@@ -16,9 +16,9 @@ def convert():
 
 	archiveflows = os.path.join('..', 'data', 'in','Flows', 'promFinal.csv');
 
-	archivelinkprincipal = os.path.join('..', 'data', 'in', 'link', 'PRINCIPAL', 'PRINCIPALES_1.xlsx');
-	archivelinksecondary = os.path.join('..', 'data', 'in', 'link', 'SECUNDARIAS','SECUNDARIAS_1.xlsx');
-	archivelinktm = os.path.join('..', 'data', 'in', 'link', 'TM', 'TM_1.xlsx');
+	archivelinkprincipal = os.path.join('..', 'data', 'in', 'Link', 'PRINCIPAL', 'PRINCIPALES_1.xlsx');
+	archivelinksecondary = os.path.join('..', 'data', 'in', 'Link', 'SECUNDARIAS','SECUNDARIAS_1.xlsx');
+	archivelinktm = os.path.join('..', 'data', 'in', 'Link', 'TM', 'TM_1.xlsx');
 
 	binding(archiveflows, archivelinkprincipal, 'principal')
 	#print 'binding Principal Listo'
@@ -29,8 +29,8 @@ def convert():
 	Type = 'NOHAB'
 	bindingsecondary(archiveflows, archivelinksecondary, Type)
 
-	archive1 = os.path.join('..', 'data', 'in', 'link', 'SECUNDARIAS', 'secundary_HABIL_binding.csv')
-	archive2 = os.path.join('..', 'data', 'in', 'link', 'SECUNDARIAS', 'secundary_NOHAB_binding.csv')
+	archive1 = os.path.join('..', 'data', 'in', 'Link', 'SECUNDARIAS', 'secundary_HABIL_binding.csv')
+	archive2 = os.path.join('..', 'data', 'in', 'Link', 'SECUNDARIAS', 'secundary_NOHAB_binding.csv')
 	unions(archive1, archive2)
 	#print 'binding Secundarias Listo'
 	
