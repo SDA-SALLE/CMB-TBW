@@ -42,7 +42,13 @@ def pmc(folder):
 
 	for i in range (0, len(listEmitionsPM25)):
 		archivePM25 = listEmitionsPM25[i]
-		archivePM10 = listEmitionsPM25[i].replace('25', '10')
+		if '2.5' in listEmitionsPM25[i]:
+			archivePM10 = listEmitionsPM25[i].replace('2.5', '10')
+		elif '25' in listEmitionsPM25[i]:
+			archivePM10 = listEmitionsPM25[i].replace('25', '10')
+		else: 
+			print 'Error'
+
 		archivePM25 = folder + archivePM25
 		archivePM10 = folder + archivePM10
 
@@ -105,6 +111,7 @@ def pmc(folder):
 			noun = noun.replace('_PM2.5_', '_')
 
 		noun = 'PMC_' + noun 
+		
 		PMC(data, noun, folder)
 
 def testingpmc(folder):
@@ -119,12 +126,12 @@ def testingpmc(folder):
 
 		for  i in range(1, MPMC.shape[0]):
 			for x in range(6, MPMC.shape[1]):
-				if 0 > MPMC[i][x] is True: 
+				number = float(MPMC[i][x])
+				if  number < 0 or number < 0.0: 
 					print 'Review process number <0'
-					break
-				else: 
+				elif number > 0 or number > 0.0: 
 					pass
-
+					
 def bindingpmc(folder): 
 	
 	listout = listaCSV(folder)

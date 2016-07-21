@@ -16,14 +16,14 @@ def convert():
 
 	archiveflows = os.path.join('..', 'data', 'in','Flows', 'promFinal.csv');
 
-	archivelinkprincipal = os.path.join('..', 'data', 'in', 'Link', 'PRINCIPAL', 'PRINCIPALES_1.xlsx');
-	archivelinksecondary = os.path.join('..', 'data', 'in', 'Link', 'SECUNDARIAS','SECUNDARIAS_1.xlsx');
-	archivelinktm = os.path.join('..', 'data', 'in', 'Link', 'TM', 'TM_1.xlsx');
+	archivelinkprincipal = os.path.join('..', 'data', 'in', 'Link', 'PRINCIPAL', 'PRINCIPALES.xlsx');
+	archivelinksecondary = os.path.join('..', 'data', 'in', 'Link', 'SECUNDARIAS','SECUNDARIAS.xlsx');
+	#archivelinktm = os.path.join('..', 'data', 'in', 'Link', 'TM', 'TM.xlsx');
 
 	binding(archiveflows, archivelinkprincipal, 'principal')
-	#print 'binding Principal Listo'
-	binding(archiveflows, archivelinktm, 'TM')
-	#print 'binding Transmilenio Listo'
+	##print 'binding Principal Listo'
+	#binding(archiveflows, archivelinktm, 'TM')
+	##print 'binding Transmilenio Listo'
 	Type = 'HABIL'
 	bindingsecondary(archiveflows, archivelinksecondary, Type)
 	Type = 'NOHAB'
@@ -32,7 +32,7 @@ def convert():
 	archive1 = os.path.join('..', 'data', 'in', 'Link', 'SECUNDARIAS', 'secundary_HABIL_binding.csv')
 	archive2 = os.path.join('..', 'data', 'in', 'Link', 'SECUNDARIAS', 'secundary_NOHAB_binding.csv')
 	unions(archive1, archive2)
-	#print 'binding Secundarias Listo'
+	print 'binding Secundarias Listo'
 	
 def categoryVechicle(data, noun, pollution, Typo): 
 
@@ -425,7 +425,7 @@ def calculation(archive, noun, FactorEmissions, Typo):
 					data[FID_LINK]['pollutants'][hour][Typo][category].append(val)
 					data[FID_LINK]['pollutants'][hour][Typo][category].append(uncertainty)
 
-		writedeparture(data, noun, poll, Typo)
+		#writedeparture(data, noun, poll, Typo)
 
 		FID_Link = data.keys()
 

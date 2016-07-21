@@ -26,11 +26,14 @@ def listaCSV(direccion):
 def writespeciation(data, namearchive, namespecie):
 
 	if 'PM2.5 BRAKE' in namearchive	or 'PM2.5 TIRE' in namearchive:	
-		folder = os.path.join('..', 'data', 'out', 'speciation', 'wear', '')
+		if 'PM2.5 BRAKE' in namearchive:
+			folder = os.path.join('..', 'data', 'out', 'speciation', 'wear', 'BRAKE', '')
+		elif 'PM2.5 TIRE' in namearchive:
+			folder = os.path.join('..', 'data', 'out', 'speciation', 'wear', 'TIRE', '')
 	else: 
 		folder = os.path.join('..', 'data' ,'out', 'speciation', 'combustion', '')
 
-	csvsalida = open(folder+ namespecie+'_'+namearchive, 'w')
+	csvsalida = open(folder + namespecie + '_' + namearchive, 'w')
 	salida = csv.writer(csvsalida, delimiter=',')
 
 	salida.writerow(['ROW', 'COL', 'LAT', 'LON', 'POLNAME', 'UNIT', 'E00h', 'E01h', 'E02h', 'E03h', 'E04h', 'E05h', 'E06h' ,'E07h', 'E08h', 'E09h', 'E10h', 'E11h', 'E12h', 'E13h', 'E14h', 'E15h', 'E16h', 'E17h', 'E18h', 'E19h', 'E20h', 'E21h', 'E22h', 'E23h', 'E24h'])
@@ -171,88 +174,100 @@ def speciationcombustion(folder):
  			index += 1 
 
  		species = matriz[1][colPOLL]
- 		if species == 'NOX': 
- 			for species in ['NO', 'NO2']:
- 				for i in range(1, matriz.shape[0]):
-		 			keys = int(matriz[i][0] + matriz[i][1])
-		 			if data.get(keys) is None: 
-		 				data[keys] = {}
-		 				data[keys]['GENERAL'] = {'ROW': [] ,'COL': [],'LAT': [],'LON': [], 'UNIT': []} 
-		 				data[keys]['hours'] = {}
+ 	# 	if species == 'NOX': 
+ 	# 		for species in ['NO', 'NO2']:
+ 	# 			for i in range(1, matriz.shape[0]):
+		#  			keys = int(matriz[i][0] + matriz[i][1])
+		#  			if data.get(keys) is None: 
+		#  				data[keys] = {}
+		#  				data[keys]['GENERAL'] = {'ROW': [] ,'COL': [],'LAT': [],'LON': [], 'UNIT': []} 
+		#  				data[keys]['hours'] = {}
 
-		 				if data[keys]['GENERAL']['ROW'] == []:
-		 					data[keys]['GENERAL']['ROW'].append(int(matriz[i][colROW]))
-		 					data[keys]['GENERAL']['COL'].append(int(matriz[i][colCOL]))
-		 					data[keys]['GENERAL']['LAT'].append(matriz[i][colLAT])
-		 					data[keys]['GENERAL']['LON'].append(matriz[i][colLON])
-		 					data[keys]['GENERAL']['UNIT'].append(matriz[i][colUNIT])
+		#  				if data[keys]['GENERAL']['ROW'] == []:
+		#  					data[keys]['GENERAL']['ROW'].append(int(matriz[i][colROW]))
+		#  					data[keys]['GENERAL']['COL'].append(int(matriz[i][colCOL]))
+		#  					data[keys]['GENERAL']['LAT'].append(matriz[i][colLAT])
+		#  					data[keys]['GENERAL']['LON'].append(matriz[i][colLON])
+		#  					data[keys]['GENERAL']['UNIT'].append(matriz[i][colUNIT])
 
-		 			entryhour = data[keys]['hours']
+		#  			entryhour = data[keys]['hours']
 					
-	 				for hour in range(0, 25):
-	 					if entryhour.get(hour) is None:
-	 						entryhour[hour] = []
+	 # 				for hour in range(0, 25):
+	 # 					if entryhour.get(hour) is None:
+	 # 						entryhour[hour] = []
 
-	 				hour = 0
-	 				for x in range(6, matriz.shape[1]):
-	 					if species == 'NO':
-	 						result = float(matriz[i][x])/3600
-	 						result = (result*0.9)/30
-	 						data[keys]['hours'][hour] = []
-	 						data[keys]['hours'][hour].append(str(result))
+	 # 				hour = 0
+	 # 				for x in range(6, matriz.shape[1]):
+	 # 					if species == 'NO':
+	 # 						result = float(matriz[i][x])/3600
+	 # 						result = (result*0.9)/30
+	 # 						data[keys]['hours'][hour] = []
+	 # 						data[keys]['hours'][hour].append(str(result))
 						
-						elif species == 'NO2': 
-							result = float(matriz[i][x])/3600
-	 						result = (result*0.1)/46
-	 						data[keys]['hours'][hour] = []
-	 						data[keys]['hours'][hour].append(str(result))
-	 					hour += 1
-					data[keys]['GENERAL']['UNIT'] = []
-					data[keys]['GENERAL']['UNIT'].append('mol/h')
+		# 				elif species == 'NO2': 
+		# 					result = float(matriz[i][x])/3600
+	 # 						result = (result*0.1)/46
+	 # 						data[keys]['hours'][hour] = []
+	 # 						data[keys]['hours'][hour].append(str(result))
+	 # 					hour += 1
+		# 			data[keys]['GENERAL']['UNIT'] = []
+		# 			data[keys]['GENERAL']['UNIT'].append('mol/h')
 
-				writespeciation(data, File, species)
+		# 		writespeciation(data, File, species)
 
-		else: 
-	 		for i in range(1, matriz.shape[0]):
-	 			keys = int(matriz[i][0] + matriz[i][1])
-	 			if data.get(keys) is None: 
-	 				data[keys] = {}
-	 				data[keys]['GENERAL'] = {'ROW': [] ,'COL': [],'LAT': [],'LON': [], 'UNIT': []} 
-	 				data[keys]['hours'] = {}
+		# else: 
 
-	 				if data[keys]['GENERAL']['ROW'] == []:
-	 					data[keys]['GENERAL']['ROW'].append(int(matriz[i][colROW]))
-	 					data[keys]['GENERAL']['COL'].append(int(matriz[i][colCOL]))
-	 					data[keys]['GENERAL']['LAT'].append(matriz[i][colLAT])
-	 					data[keys]['GENERAL']['LON'].append(matriz[i][colLON])
-	 					data[keys]['GENERAL']['UNIT'].append(matriz[i][colUNIT])
+ 		for i in range(1, matriz.shape[0]):
+ 			keys = int(matriz[i][0] + matriz[i][1])
+ 			if data.get(keys) is None: 
+ 				data[keys] = {}
+ 				data[keys]['GENERAL'] = {'ROW': [] ,'COL': [],'LAT': [],'LON': [], 'UNIT': []} 
+ 				data[keys]['hours'] = {}
 
-	 				
-	 				entryhour = data[keys]['hours']
+ 				if data[keys]['GENERAL']['ROW'] == []:
+ 					data[keys]['GENERAL']['ROW'].append(int(matriz[i][colROW]))
+ 					data[keys]['GENERAL']['COL'].append(int(matriz[i][colCOL]))
+ 					data[keys]['GENERAL']['LAT'].append(matriz[i][colLAT])
+ 					data[keys]['GENERAL']['LON'].append(matriz[i][colLON])
+ 					data[keys]['GENERAL']['UNIT'].append(matriz[i][colUNIT])
+
+ 				
+ 				entryhour = data[keys]['hours']
+				
+ 				for hour in range(0, 25):
+ 					if entryhour.get(hour) is None:
+ 						entryhour[hour] = []
+
+ 				hour = 0
+ 				for x in range(6, matriz.shape[1]):
+					if species in ['CO', 'CO2', 'SO2']:
+						if species == 'CO': 
+							data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/28))
+						if species == 'CO2': 
+							data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/44))
+						if species == 'SO2': 
+							data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/64))
+						data[keys]['GENERAL']['UNIT'] = []
+						data[keys]['GENERAL']['UNIT'].append('mol/h')
+					if species in ['NO', 'NO2']:
+						if species == 'NO': 
+							data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/28))
+						if species == 'NO2': 
+							data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/44))
+						data[keys]['GENERAL']['UNIT'] = []
+						data[keys]['GENERAL']['UNIT'].append('mol/h')
 					
-	 				for hour in range(0, 25):
-	 					if entryhour.get(hour) is None:
-	 						entryhour[hour] = []
-
-	 				hour = 0
-	 				for x in range(6, matriz.shape[1]):
-						if species in ['CO', 'CO2', 'SO2']:
-							if species == 'CO': 
-								data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/28))
-							if species == 'CO2': 
-								data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/44))
-							if species == 'SO2': 
-								data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/64))
-							data[keys]['GENERAL']['UNIT'] = []
-							data[keys]['GENERAL']['UNIT'].append('mol/h')
-						else: 
-	 						data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)))
-	 					hour += 1			
+					else: 
+ 						data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)))
+ 					hour += 1			
  			writespeciation(data, File, species)
 
 def testing(name):
 	folder1 = os.path.join('..', 'data','out', 'emissions', 'grid', 'wear', '')
-	folder2 = os.path.join('..', 'data','out', 'speciation', 'wear', '')
+	if 'BRAKE' in name:
+		folder2 = os.path.join('..', 'data','out', 'speciation', 'wear', 'BRAKE', '')
+	if 'TIRE' in name:	
+		folder2 = os.path.join('..', 'data','out', 'speciation', 'wear', 'TIRE', '')
 
 
 	listEmision = listaCSV(folder1)

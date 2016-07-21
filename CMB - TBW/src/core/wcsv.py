@@ -256,9 +256,11 @@ def writeemsions(data, name, pollutant, Typo, id):
 def PMC(data, noun, folder):
 
 	if 'TIRE' in noun or 'BRAKE' in noun:
-		folder = os.path.join('..', 'data','out', 'emissions', 'grid', 'PMC', 'Wear', '')
-	else: 
-		folder = os.path.join('..', 'data' ,'out', 'emissions', 'grid', 'PMC', 'Combustion', '')
+		folder = os.path.join('..', 'data','out', 'speciation', 'Wear', '')
+		#folder = os.path.join('..', 'data','out', 'emissions', 'grid', 'PMC', 'Wear', '')
+	else:
+		folder = os.path.join('..', 'data' ,'out', 'speciation', 'Combustion', '') 
+		#folder = os.path.join('..', 'data' ,'out', 'emissions', 'grid', 'PMC', 'Combustion', '')
 	csvsalida = open(folder + noun + '.csv', 'w')
 	salida = csv.writer(csvsalida, delimiter=',')
 	keys = data.keys()

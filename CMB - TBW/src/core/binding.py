@@ -113,11 +113,9 @@ def binding(flows, links, noun):
 				 	entryVehicle[headFlows].append(MFlows[y][x])
 	MFlows = None
 	if noun == 'principal': 
-		folder = os.path.join("..", 'data', 'in','link', 'PRINCIPAL','')
+		folder = os.path.join("..", 'data', 'in','Link', 'PRINCIPAL','')
 	elif noun == 'TM': 
-		folder = os.path.join("..", 'data', 'in','link', 'TM','')
-	#elif noun == 'HABIL' or noun == 'NOHAB': 
-	#	folder = os.path.join("..", 'data', 'in', 'datalink', 'SECUNDARIAS','')
+		folder = os.path.join("..", 'data', 'in','Link', 'TM','')
 	
 	writebinding(folder, data, noun)
 
@@ -126,8 +124,13 @@ def bindingsecondary(flows, links, typ):
 	data = {}
 	#print 'Start', typ
 	Intermedia = 0.37
-	Local = 0.22
-	Activity = ['AUT_Gas', 'AUT_Gas', 'AUT_GNV', 'CC_Gas', 'CC_Dsel', 'CC_GNV', 'TX_Gas', 'TX_GNV', 'MB_Dsel', 'ESP_Gas', 'ESP_Dsel', 'ESP_GNV', 'M_Gas']
+
+	LocalActivity = ['AUT_Gas', 'AUT_GNV', 'CC_Gas', 'CC_Dsel', 'CC_GNV', 'TX_Gas', 'TX_GNV', 'MB_Dsel', 'ESP_Gas', 'ESP_Dsel', 'ESP_GNV', 'M_Gas']
+	LocalAct = 0.22
+	LocalNotActivity = [ 'B_Dsel', 'C2P_Dsel', 'C2P_Gas', 'C2P_GNV', 'BT_Dsel', 'AL_Dsel', 'AT_Dsel', 'BA_Dsel', 'INT_Dsel', 'INT_Gas','INT_GNV', 'C2G_Dsel', 'C2G_Gas', 'C2G_GNV', 'C3-C4_Dsel', 'C3-C4_Gas', 'C3-C4_GNV', 'c5_Dsel', 'c5_Gas', 'c5_GNV', '>c5_Dsel', '>c5_Gas', '>c5_GNV']
+	LocalNotAct = 0
+
+	Activity = ['AUT_Gas', 'AUT_GNV', 'CC_Gas', 'CC_Dsel', 'CC_GNV', 'TX_Gas', 'TX_GNV', 'MB_Dsel', 'ESP_Gas', 'ESP_Dsel', 'ESP_GNV', 'M_Gas']
 	ResidencialAct = 0.22
 	NotActivity = [ 'B_Dsel', 'C2P_Dsel', 'C2P_Gas', 'C2P_GNV', 'BT_Dsel', 'AL_Dsel', 'AT_Dsel', 'BA_Dsel', 'INT_Dsel', 'INT_Gas','INT_GNV', 'C2G_Dsel', 'C2G_Gas', 'C2G_GNV', 'C3-C4_Dsel', 'C3-C4_Gas', 'C3-C4_GNV', 'c5_Dsel', 'c5_Gas', 'c5_GNV', '>c5_Dsel', '>c5_Gas', '>c5_GNV']
 	ResidencialNotAct = 0
@@ -218,12 +221,18 @@ def bindingsecondary(flows, links, typ):
 				namevehicle = sorted(data[ID]['flows'][typ][hr].keys())
 				
 				if clasifi == 'Local':
-					for Vehicle in namevehicle: 
-						data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * Local
+					for Vehicle in LocalActivity: 
+						data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * LocalAct
+
+					for Vehicle in LocalNotActivity: 
+						data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * LocalNotAct
 
 				if clasifi == 'Intermedia':
 					for Vehicle in namevehicle: 
-						data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * Intermedia 
+						if Vehicle == 'AT_Dsel' or Vehicle == 'AL_Dsel' or Vehicle == 'BA_Dsel': 
+							data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * 0
+						else: 
+							data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * Intermedia
 
 				if clasifi == 'Residencial':
 					for Vehicle in Activity: 
@@ -232,7 +241,7 @@ def bindingsecondary(flows, links, typ):
 					for Vehicle in NotActivity:
 						data[ID]['flows'][typ][hr][Vehicle][0] = float(data[ID]['flows'][typ][hr][Vehicle][0]) * ResidencialNotAct
 
-	folder = os.path.join('..', 'data', 'in', 'link', 'SECUNDARIAS', '')
+	folder = os.path.join('..', 'data', 'in', 'Link', 'SECUNDARIAS', '')
 	writeBindingSecondary(folder, data, "secundary", typ)
 
 def bindingfinality(folderbrinding):
@@ -590,7 +599,7 @@ def unions(archive1, archive2):
 	name = None
 	name2 = None
 
-	folder = os.path.join('..', 'data', 'in','link', 'SECUNDARIAS', '')
+	folder = os.path.join('..', 'data', 'in','Link', 'SECUNDARIAS', '')
 	
 	csvsalida = open(folder + 'secundaryBinding.csv', 'w')
 	salida = csv.writer(csvsalida, delimiter=',')
