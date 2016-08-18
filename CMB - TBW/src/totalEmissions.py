@@ -53,13 +53,15 @@ def full(archive, noun, Type):
 
 	archivePrincipal = archive
 	matrizHabilPrincipal = convertCSVMatriz(archivePrincipal)
+	
 	archivePrincipal = archive.replace('Habil', 'NHabil')
 	matrizNHabilPrincipal = convertCSVMatriz(archivePrincipal)
 
 	archiveSecundary = archive.replace('Principal', 'Secundary')
-	#print archiveSecundary
 	matrizHabilSecundary = convertCSVMatriz(archiveSecundary)
-	archiveSecundary = archive.replace('Habil', 'NHabil')
+	
+	archiveSecundary = archiveSecundary.replace('Habil', 'NHabil')
+	#print archiveSecundary
 	matrizNHabilSecundary = convertCSVMatriz(archiveSecundary)
 
 	head = matrizHabilPrincipal[0,:]
@@ -80,6 +82,7 @@ def full(archive, noun, Type):
 
 	for i in range(1, matrizHabilPrincipal.shape[0]):
 		for x in range(colInit, colEnd):
+			#print matrizHabilPrincipal[0][x]
 			fullHabilPrincipal += float(matrizHabilPrincipal[i][x])
 
 	for i in range(1, matrizNHabilPrincipal.shape[0]):
@@ -109,13 +112,12 @@ def full(archive, noun, Type):
 
 	
 	full = fullHabilPrincipal + fullNHabilPrincipal + fullHabilSecundary + fullNHabilSecundary 
-	#print fullHabil, '+' ,fullNHabil, '=', full
+
 	writefull(str(full), noun, Type)
 
 def totalemission(folder):
 
 	listEmissions = listaCSV(folder)
-	#print listEmissions
 	if 'combustion' in folder:
 		Type = 'combustion'
 	elif 'wear' in folder: 
@@ -123,6 +125,5 @@ def totalemission(folder):
 
 	for name in listEmissions:
 		if '_Habil' in name and 'Principal' in name: 
-			#print 'Paso'
 			archive = os.path.join(folder, name)
 			full(archive, name, Type)

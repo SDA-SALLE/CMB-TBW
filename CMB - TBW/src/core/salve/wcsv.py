@@ -94,36 +94,37 @@ def writesum(data):
 def writebinding(folder, data, name):
 
 	csvsalida = open(folder + name +'binding.csv', 'w')
-	nameData = ['FID','hora'] #'>C5_DSEL', '>C5_GNV', '>C5_GAS', 'AL_DSEL', 'AT_DSEL', 'AUT_GNV', 'AUT_GAS', 'BA_DSEL', 'BT_DSEL', 'B_DSEL', 'C2G_DSEL', 'C2G_GNV', 'C2G_GAS', 'C2P_DSEL', 'C2P_GNV', 'C2P_GAS', 'C3-C4_DSEL', 'C3-C4_GNV', 'C3-C4_GAS', 'CC_DSEL', 'CC_GNV', 'CC_GAS', 'ESP_DSEL', 'ESP_GNV', 'ESP_GAS', 'INT_DSEL', 'INT_GNV', 'INT_GAS', 'MB_DSEL', 'M_GAS', 'TX_GNV', 'TX_GAS', 'C5_DSEL', 'C5_GNV', 'C5_GAS', 'NH>C5_DSEL', 'NH>C5_GNV', 'NH>C5_GAS', 'NHAL_DSEL', 'NHAT_DSEL', 'NHAUT_GNV', 'NHAUT_GAS', 'NHBA_DSEL', 'NHBT_DSEL', 'NHB_DSEL', 'NHC2G_DSEL', 'NHC2G_GNV', 'NHC2G_GAS', 'NHC2P_DSEL', 'NHC2P_GNV', 'NHC2P_GAS', 'NHC3-C4_DSEL', 'NHC3-C4_GNV', 'NHC3-C4_GAS', 'NHCC_DSEL', 'NHCC_GNV', 'NHCC_GAS', 'NHESP_DSEL', 'NHESP_GNV', 'NHESP_GAS', 'NHINT_DSEL', 'NHINT_GNV', 'NHINT_GAS', 'NHMB_DSEL', 'NHM_GAS', 'NHTX_GNV', 'NHTX_GAS', 'NHC5_DSEL', 'NHC5_GNV', 'NHC5_GAS']
+	namevehicle1 = ['FID','hora']#, '>C5_DSEL', '>C5_GNV', '>C5_GAS', 'AL_DSEL', 'AT_DSEL', 'AUT_GNV', 'AUT_GAS', 'BA_DSEL', 'BT_DSEL', 'B_DSEL', 'C2G_DSEL', 'C2G_GNV', 'C2G_GAS', 'C2P_DSEL', 'C2P_GNV', 'C2P_GAS', 'C3-C4_DSEL', 'C3-C4_GNV', 'C3-C4_GAS', 'CC_DSEL', 'CC_GNV', 'CC_GAS', 'ESP_DSEL', 'ESP_GNV', 'ESP_GAS', 'INT_DSEL', 'INT_GNV', 'INT_GAS', 'MB_DSEL', 'M_GAS', 'TX_GNV', 'TX_GAS', 'C5_DSEL', 'C5_GNV', 'C5_GAS', 'NH>C5_DSEL', 'NH>C5_GNV', 'NH>C5_GAS', 'NHAL_DSEL', 'NHAT_DSEL', 'NHAUT_GNV', 'NHAUT_GAS', 'NHBA_DSEL', 'NHBT_DSEL', 'NHB_DSEL', 'NHC2G_DSEL', 'NHC2G_GNV', 'NHC2G_GAS', 'NHC2P_DSEL', 'NHC2P_GNV', 'NHC2P_GAS', 'NHC3-C4_DSEL', 'NHC3-C4_GNV', 'NHC3-C4_GAS', 'NHCC_DSEL', 'NHCC_GNV', 'NHCC_GAS', 'NHESP_DSEL', 'NHESP_GNV', 'NHESP_GAS', 'NHINT_DSEL', 'NHINT_GNV', 'NHINT_GAS', 'NHMB_DSEL', 'NHM_GAS', 'NHTX_GNV', 'NHTX_GAS', 'NHC5_DSEL', 'NHC5_GNV', 'NHC5_GAS']
 	FID = data.keys()
-
-	nameVehicle = sorted(data[FID[0]]['flows']['HABIL'][0])
-	nameHabil = nameData + nameVehicle
-	nameNHabil = nameVehicle
-
+	#print sorted(data[FID[0]]['flows']['HABIL'][0])
+	namevehicle2 = sorted(data[FID[0]]['flows']['HABIL'][0])
+	nameVehicleHabil = namevehicle1 + namevehicle2
+	nameVehicleNHabil = namevehicle2
 	cont = 0
 	
 	for ID in FID:
 		nameslinks = data[ID]['link'].keys()
-		namevehicle = sorted(data[ID]['flows']['HABIL'][0].keys())
+		nameVehicle = sorted(data[ID]['flows']['HABIL'][0].keys())
+
 		hours = data[ID]['flows']['HABIL'].keys()
 
 		if cont == 0:
 			for name in nameslinks:
 				csvsalida.write(name)
 				csvsalida.write(',')
-	
-			for name in nameHabil:
+
+			for name in nameVehicleHabil:
 				csvsalida.write(name)
 				csvsalida.write(',')
 			
-			for name in nameNHabil:
-				if name == nameNHabil[0]:
+			for name in nameVehicleNHabil:
+				if name == nameVehicleNHabil[0]:
 					csvsalida.write('NH' + name)
 				else: 
 					csvsalida.write(',')
 					csvsalida.write('NH' + name)
 			csvsalida.write('\n')
+
 			cont += 1
 	 	
 
@@ -137,17 +138,17 @@ def writebinding(folder, data, name):
 		 	csvsalida.write(str(hour))
 		 	csvsalida.write(',')
 
-		 	for vehicle in nameVehicle:
-		 		csvsalida.write (str(data[ID]['flows']['HABIL'][hour][vehicle]))
+		 	for vehicle in nameVehicleHabil:
+		 		csvsalida.write (str(data[ID]['flows']['HABIL'][hour][vehicle][0]))
 		 		csvsalida.write(',')
 		 	cont = 0
-		 	for vehicle in nameVehicle:
+		 	for vehicle in namevehicle:
 		 		if cont == 0:
-		 			csvsalida.write (str(data[ID]['flows']['HABIL'][hour][vehicle]))
+		 			csvsalida.write (str(data[ID]['flows']['HABIL'][hour][vehicle][0]))
 		 			cont += 1
 		 		else:
 		 			csvsalida.write(',')
-		 			csvsalida.write (str(data[ID]['flows']['NOHAB'][hour][vehicle]))
+		 			csvsalida.write (str(data[ID]['flows']['NOHAB'][hour][vehicle][0]))
 		 			
 		 	csvsalida.write('\n')
 		data[ID] = None
@@ -157,46 +158,37 @@ def writebinding(folder, data, name):
 def writeBindingSecondary(folder, data, name, Typo):
 
 	csvsalida = open(folder + name + '_' + Typo + '_' +'binding.csv', 'w')
-	nameData = ['FID','hora']
-	#if Typo == 'HABIL':
-	#	namevehiclefull = ['FID','hora'] '>C5_DSEL', '>C5_GNV', '>C5_GAS', 'AL_DSEL', 'AT_DSEL', 'AUT_GNV', 'AUT_GAS', 'BA_DSEL', 'BT_DSEL', 'B_DSEL', 'C2G_DSEL', 'C2G_GNV', 'C2G_GAS', 'C2P_DSEL', 'C2P_GNV', 'C2P_GAS', 'C3-C4_DSEL', 'C3-C4_GNV', 'C3-C4_GAS', 'CC_DSEL', 'CC_GNV', 'CC_GAS', 'ESP_DSEL', 'ESP_GNV', 'ESP_GAS', 'INT_DSEL', 'INT_GNV', 'INT_GAS', 'MB_DSEL', 'M_GAS', 'TX_GNV', 'TX_GAS', 'C5_DSEL', 'C5_GNV', 'C5_GAS']
-	#elif Typo == 'NOHAB': 
-	#	namevehiclefull = ['FID','hora', 'NH>C5_DSEL', 'NH>C5_GNV', 'NH>C5_GAS', 'NHAL_DSEL', 'NHAT_DSEL', 'NHAUT_GNV', 'NHAUT_GAS', 'NHBA_DSEL', 'NHBT_DSEL', 'NHB_DSEL', 'NHC2G_DSEL', 'NHC2G_GNV', 'NHC2G_GAS', 'NHC2P_DSEL', 'NHC2P_GNV', 'NHC2P_GAS', 'NHC3-C4_DSEL', 'NHC3-C4_GNV', 'NHC3-C4_GAS', 'NHCC_DSEL', 'NHCC_GNV', 'NHCC_GAS', 'NHESP_DSEL', 'NHESP_GNV', 'NHESP_GAS', 'NHINT_DSEL', 'NHINT_GNV', 'NHINT_GAS', 'NHMB_DSEL', 'NHM_GAS', 'NHTX_GNV', 'NHTX_GAS', 'NHC5_DSEL', 'NHC5_GNV', 'NHC5_GAS']
+	if Typo == 'HABIL':
+		namevehiclefull = ['FID','hora', '>C5_DSEL', '>C5_GNV', '>C5_GAS', 'AL_DSEL', 'AT_DSEL', 'AUT_GNV', 'AUT_GAS', 'BA_DSEL', 'BT_DSEL', 'B_DSEL', 'C2G_DSEL', 'C2G_GNV', 'C2G_GAS', 'C2P_DSEL', 'C2P_GNV', 'C2P_GAS', 'C3-C4_DSEL', 'C3-C4_GNV', 'C3-C4_GAS', 'CC_DSEL', 'CC_GNV', 'CC_GAS', 'ESP_DSEL', 'ESP_GNV', 'ESP_GAS', 'INT_DSEL', 'INT_GNV', 'INT_GAS', 'MB_DSEL', 'M_GAS', 'TX_GNV', 'TX_GAS', 'C5_DSEL', 'C5_GNV', 'C5_GAS']
+	elif Typo == 'NOHAB': 
+		namevehiclefull = ['FID','hora', 'NH>C5_DSEL', 'NH>C5_GNV', 'NH>C5_GAS', 'NHAL_DSEL', 'NHAT_DSEL', 'NHAUT_GNV', 'NHAUT_GAS', 'NHBA_DSEL', 'NHBT_DSEL', 'NHB_DSEL', 'NHC2G_DSEL', 'NHC2G_GNV', 'NHC2G_GAS', 'NHC2P_DSEL', 'NHC2P_GNV', 'NHC2P_GAS', 'NHC3-C4_DSEL', 'NHC3-C4_GNV', 'NHC3-C4_GAS', 'NHCC_DSEL', 'NHCC_GNV', 'NHCC_GAS', 'NHESP_DSEL', 'NHESP_GNV', 'NHESP_GAS', 'NHINT_DSEL', 'NHINT_GNV', 'NHINT_GAS', 'NHMB_DSEL', 'NHM_GAS', 'NHTX_GNV', 'NHTX_GAS', 'NHC5_DSEL', 'NHC5_GNV', 'NHC5_GAS']
 	FID = data.keys()
-
-	nameCategories = sorted(data[FID[0]]['flows'][Typo][0])
-	nameVehicle = nameData + nameCategories
-
 
 	cont = 0
 	for ID in FID:
 		nameslinks = data[ID]['link'].keys()
 		Typ = data[ID]['flows'].keys()
 		Typ = Typ[0]
-		#namevehicle = sorted(data[ID]['flows'][Typ][0].keys())
+		namevehicle = sorted(data[ID]['flows'][Typ][0].keys())
 		hours = data[ID]['flows'][Typ].keys()
 
 		if cont == 0:
 			for name in nameslinks:
 				csvsalida.write(name)
 				csvsalida.write(',')
-			if Typo == 'HABIL':
-				for name in nameVehicle:
-					if name == nameVehicle[0]:
-						csvsalida.write(name)			
-					else: 
-						csvsalida.write(',')
-						csvsalida.write(name)
-				csvsalida.write('\n')
-			if Typo == 'NOHAB': 
-				for name in nameVehicle:
-					if name == nameVehicle[0]:
-						csvsalida.write('NH' + name)			
-					else: 
-						csvsalida.write(',')
-						csvsalida.write('NH' + name)
-				csvsalida.write('\n')		
+
+			rest = 0
+			for name in namevehiclefull:
+				if rest == 0:
+					csvsalida.write(name)
+					rest += 1
+				else: 
+					csvsalida.write(',')
+					csvsalida.write(name)
+			csvsalida.write('\n')
+
 			cont += 1
+	 	
 
 		for hour in hours:
 
@@ -206,9 +198,9 @@ def writeBindingSecondary(folder, data, name, Typo):
 		 	csvsalida.write(str(ID))
 		 	csvsalida.write(',')
 		 	csvsalida.write(str(hour))
-		 	for vehicle in nameCategories:
+		 	for vehicle in namevehicle:
 		 		csvsalida.write(',')
-		 		csvsalida.write(str(data[ID]['flows'][Typo][hour][vehicle][0]))
+		 		csvsalida.write (str(data[ID]['flows'][Typo][hour][vehicle][0]))
 		 	csvsalida.write('\n')
 		data[ID] = None
 	data = None
@@ -270,9 +262,11 @@ def writeemsions(data, name, pollutant, Typo, id):
 def PMC(data, noun, folder):
 
 	if 'TIRE' in noun or 'BRAKE' in noun:
-		folder = os.path.join('..', 'data','out', 'emissions', 'grid', 'PMC', 'Wear', '')
-	else: 
-		folder = os.path.join('..', 'data' ,'out', 'emissions', 'grid', 'PMC', 'Combustion', '')
+		folder = os.path.join('..', 'data','out', 'speciation', 'wear', '')
+		#folder = os.path.join('..', 'data','out', 'emissions', 'grid', 'PMC', 'Wear', '')
+	else:
+		folder = os.path.join('..', 'data' ,'out', 'speciation', 'combustion', '') 
+		#folder = os.path.join('..', 'data' ,'out', 'emissions', 'grid', 'PMC', 'Combustion', '')
 	csvsalida = open(folder + noun + '.csv', 'w')
 	salida = csv.writer(csvsalida, delimiter=',')
 	keys = data.keys()
@@ -345,7 +339,7 @@ def writevehicle(data, noun, pollutant, Typo, id):
 
 	if id == 2: 
 
-		folder = os.path.join('..', 'data','out', 'category', 'grid', '')
+		folder = os.path.join('..', 'out', 'category', 'grid', '')
 		
 		csvsalida = open(folder + noun, 'w')
 		salida = csv.writer(csvsalida, delimiter=',')
@@ -423,7 +417,7 @@ def writecarburant(data, noun, pollutant, Typo,  id):
 		csvsalida.close()
 
 	if id == 2: 
-		folder = os.path.join('..', 'data', 'out', 'carburant', 'grid', '')
+		folder = os.path.join('..', 'out', 'carburant', 'grid', '')
 		
 		csvsalida = open(folder + noun, 'w')
 		salida = csv.writer(csvsalida, delimiter=',')

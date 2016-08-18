@@ -38,8 +38,8 @@ def writespeciation(data, namearchive, namespecie):
 
 	salida.writerow(['ROW', 'COL', 'LAT', 'LON', 'POLNAME', 'UNIT', 'E00h', 'E01h', 'E02h', 'E03h', 'E04h', 'E05h', 'E06h' ,'E07h', 'E08h', 'E09h', 'E10h', 'E11h', 'E12h', 'E13h', 'E14h', 'E15h', 'E16h', 'E17h', 'E18h', 'E19h', 'E20h', 'E21h', 'E22h', 'E23h', 'E24h'])
 
-	keys = data.keys()
-	for key in keys:
+	#keys = data.keys()
+	for key in data:
 		csvsalida.write(str(data[key]['GENERAL']['ROW'][0]))
 		csvsalida.write(',')
 		csvsalida.write(str(data[key]['GENERAL']['COL'][0]))
@@ -55,9 +55,9 @@ def writespeciation(data, namearchive, namespecie):
 		elif data[key]['GENERAL']['UNIT'][0] == 'mol/h':
 			csvsalida.write('mol/s')
 		csvsalida.write(',')
-		hours = data[key]['hours'].keys()
+		hours = data[key]['hours']
 		for hour in hours:
-			csvsalida.write(data[key]['hours'][hour][0])
+			csvsalida.write(hours[hour][0])
 			if hour != 24:
 				csvsalida.write(',')
 		csvsalida.write('\n')
@@ -143,7 +143,7 @@ def speciationwear(archivespeciation, folder):
 
 	 				hour = 0
 	 				for x in range(6, matriz.shape[1]):
-	 					data[keys]['hours'][hour].append(str((float(matriz[i][x]) * float(speciation[species]))/3600))
+	 					data[keys]['hours'][hour].append(str((float(matriz[i][x]) * float(speciation[species])) / 3600))
 	 					hour += 1			
 
 	 		writespeciation(data, File, species)
@@ -174,6 +174,7 @@ def speciationcombustion(folder):
  			index += 1 
 
  		species = matriz[1][colPOLL]
+ 		
  	# 	if species == 'NOX': 
  	# 		for species in ['NO', 'NO2']:
  	# 			for i in range(1, matriz.shape[0]):
@@ -242,9 +243,9 @@ def speciationcombustion(folder):
  				for x in range(6, matriz.shape[1]):
 					if species in ['CO', 'CO2', 'SO2']:
 						if species == 'CO': 
-							data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/28))
+							data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600) / 28))
 						if species == 'CO2': 
-							data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/44))
+							data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600) / 44))
 						if species == 'SO2': 
 							data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)/64))
 						data[keys]['GENERAL']['UNIT'] = []
@@ -258,7 +259,8 @@ def speciationcombustion(folder):
 						data[keys]['GENERAL']['UNIT'].append('mol/h')
 					
 					else: 
- 						data[keys]['hours'][hour].append(str((float(matriz[i][x])/3600)))
+ 						data[keys]['hours'][hour].append(str((float(matriz[i][x]) / 3600)))
+
  					hour += 1			
  			writespeciation(data, File, species)
 
